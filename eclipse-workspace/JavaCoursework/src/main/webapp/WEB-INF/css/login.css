@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+
+.login-form{
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ width: 200vw;
+ background-color:black;
+ padding: 20px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group{
+    margin: 10px;
+}
+
+.login-image{
+
+}
+
+.login-form button{
+
+}
