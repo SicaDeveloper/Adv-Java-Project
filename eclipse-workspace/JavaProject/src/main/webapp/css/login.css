@@ -1,0 +1,166 @@
+@charset "UTF-8";
+
+/* Login page CSS */
+/* clearing off default margin and padding values */
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* setting margins for the header tag */
+.title h2{
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+/* setting margins for the h5 tag */
+.title h5{
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+/* setting boilerplate flexbox for the login container */
+
+.login-container{
+    display: flex;
+    background-color: #ffffff;
+    width: 100%;
+}
+
+/* setting the height, border size, colour and shadow for the login form */
+.login-form{
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ height: 80vh;
+ max-width: 800px;
+ gap: 18px;
+ padding: 30px;
+ border: 1px solid rgb(0, 0, 0, 0.1);
+ border-radius: 20px;
+ margin:auto;
+ box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+}
+
+
+form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: max-content;
+}
+
+/* setting the boilerplate flexbox for the form group */
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 10px 0px 10px 0px;
+}
+
+
+/* changing the appearance of the input fields */
+
+.form-group input{
+    width: 320px;
+    padding: 8px;
+    border-radius: 8px;
+    border: solid 2px rgb(240, 236, 236) ;
+}
+
+/* adding padding to the left of the label */
+.form-group label{
+    padding-left: 3px;
+}
+
+/* for hover change border color */
+.form-group input:hover{
+    border-color: #ebe9e9;
+}
+
+/* setting image size and view */
+
+.login-image{
+    width: 50vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+/* changing the login button appearance to black background and white font */
+.login-button{
+    background-color: black;
+    color: white;
+    border-radius: 8px;
+    height: auto;
+    width: 340px;
+    padding: 10px;
+}
+/* setting size for the logo in the button */
+.btn-logo{
+ object-fit: contain;
+ height: 20px;
+ width: 20px;
+}
+
+/* boilerplate and adding gap between the buttons */
+.oauth-login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+}
+/* overall boilerplate and design for divider */
+.divider {
+    display: flex;
+    align-items: center;
+    width: 100%; 
+    margin: 20px 0; 
+  }
+  /* adding a line on the left and right */
+  .left, .right {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #ccc; 
+  }
+  /* the font text of "or" */
+  .or {
+    padding: 0 10px;
+    font-size: 1em; 
+    color: #555; 
+  }
+/* text for the forgot password */
+.forgot-password{
+    text-decoration: none;
+    color: black;
+    font-size: 12px;
+    text-align: end;
+}
+/* setting border appearance */
+
+.oauth-login button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background-color: white;
+    border-radius: 8px;
+    height: auto;
+    width: 160px;
+    padding: 10px;
+    border: solid rgb(137, 131, 131, 0.2) 2px;
+    cursor: pointer;
+}
+
+.signup-link{
+    text-decoration: none;
+    color: rgb(0, 38, 255);
+}
+
+.btn-text{
+	font-size:12px;
+}
