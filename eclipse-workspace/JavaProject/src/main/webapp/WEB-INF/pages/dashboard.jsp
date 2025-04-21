@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title></title>
 </head>
 <body>
- this is the logged in page
+<jsp:include page="homePage/navbar.jsp"></jsp:include>
+<jsp:include page="productPage/product-listing-page.jsp"></jsp:include>
 </body>
 </html>

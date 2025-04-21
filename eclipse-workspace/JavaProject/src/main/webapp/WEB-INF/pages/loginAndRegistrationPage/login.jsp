@@ -1,11 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8" />
 		<title>Login</title>
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css" />
+		<!-- 
+			Author: Raj Dangol
+			Date: 15th April, 2025
+			Login page
+		-->
 	</head>
 	<body>
 		<div class="login-container">
@@ -21,12 +25,12 @@ pageEncoding="UTF-8"%>
 				</div>
 				<form method="post" action="login">
 					<div class="form-group">
-						<label for="username">Username</label>
+						<label for="email">Email</label>
 						<input
 							type="text"
-							id="username"
-							name="username"
-							placeholder="Enter your username"
+							id="email"
+							name="email"
+							placeholder="Enter your email"
 							required
 						/>
 					</div>
@@ -52,15 +56,15 @@ pageEncoding="UTF-8"%>
 				</div>
 				<div class="oauth-login">
 					<button>
-						<img class="btn-logo" src="${contextPath}/resource/icons-google.png" />
-						<span class="btn-text">Sign in with Google</span>
+						<img class="btn-logo" src="${pageContext.request.contextPath}/resource/icons-google.png" />
+						<span>Sign in with Google</span>
 					</button>
 					<button>
-						<img class="btn-logo" src="${contextPath}/resource/icons-apple.png" />
-						<span class="btn-text">Sign in with Apple</span>
+						<img class="btn-logo" src="${pageContext.request.contextPath}/resource/icons-apple.png" />
+						<span>Sign in with Apple</span>
 					</button>
 				</div>
-				<div class="signup">Don't have an account? <a class="signup-link" href="${contextPath}/register">Sign up</a></div>
+				<div class="signup">Don't have an account? <a class="signup-link" href="${pageContext.request.contextPath}/register">Sign up</a></div>
 			</div>
 		</div>
 	</body>

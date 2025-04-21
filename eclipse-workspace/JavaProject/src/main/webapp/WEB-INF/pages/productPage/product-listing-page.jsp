@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title></title>
 </head>
 <body>
-hello world
-<a href="${pageContext.request.contextPath}/login">Login</a>
+<jsp:include page="../homePage/navbar.jsp"></jsp:include>
+<jsp:include page="product-listing.jsp"></jsp:include>
 </body>
 </html>

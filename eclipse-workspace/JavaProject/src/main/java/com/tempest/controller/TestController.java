@@ -6,19 +6,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import com.tempest.model.User;
-import com.tempest.model.UserModel;
+
 /**
- * Servlet implementation class RegisterController
+ * Servlet implementation class TestController
  */
-@WebServlet("/register")
-public class RegisterController extends HttpServlet {
+@WebServlet(asyncSupported = true, urlPatterns = { "/test" })
+public class TestController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RegisterController() {
+    public TestController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -28,7 +27,7 @@ public class RegisterController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.getRequestDispatcher("/WEB-INF/pages/loginAndRegistrationPage/register.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/pages/productPage/product-detail.jsp").forward(request, response);
 	}
 
 	/**
@@ -36,14 +35,7 @@ public class RegisterController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		private final String username = request.getParameter("username");
-		private final String password = request.getParameter("password");
-		
-		UserModel currentUser = new UserModel(username, password);
-		currentUser.setRole(UserModel.Roles.customer);
-		
-		
+		doGet(request, response);
 	}
 
 }

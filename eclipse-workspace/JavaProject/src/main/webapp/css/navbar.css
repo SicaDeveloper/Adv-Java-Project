@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: black;
+    padding: 10px 20px;
+  }
+
+  .logo img {
+    height: 3vh;
+  }
+
+  .navbar{
+    padding: 20px 30px 20px 30px;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    padding: 0 10px 0 10px;
+    color: #fff;
+  }
+
+  .nav-right a {
+    text-decoration: none;
+    padding: 5px;
+    color: #fff;
+  }
+
+.nav-icon{
+   fill: white;
+}

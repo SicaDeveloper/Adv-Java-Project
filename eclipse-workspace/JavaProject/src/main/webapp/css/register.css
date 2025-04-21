@@ -1,0 +1,168 @@
+/* Reset and global styles */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-sizing: border-box;
+}
+
+/* Centering the form container */
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+/* Enlarged form container with better spacing */
+.register-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    padding: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    margin: auto;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+/* Add gap between title and the rest of the form */
+.title {
+    margin-bottom: 25px;
+}
+
+/* Proper spacing between form rows */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    width: 100%;
+}
+
+/* Form group styling */
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* Decreased input field width & vertical size, with a lighter border */
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: solid 2px rgb(240, 240, 240);  /* Lighter grey border */
+    background-color: #f9f9f9;
+}
+
+/* Label styling */
+.form-group label {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* Hover effect on inputs with a lighter hover border color */
+.form-group input:hover {
+    border-color: #ddd;
+}
+
+/* Terms agreement styling */
+.terms-agreement {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    padding: 15px 0;
+    gap: 7px;
+}
+
+/* Styling the sign-up button */
+.register-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.register-button:hover {
+    background-color: #222;
+}
+
+/* Divider styling */
+.divider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.left,
+.right {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.or {
+    padding: 0 10px;
+    font-size: 1em;
+    color: #555;
+}
+
+/* Styling the registration image */
+.register-image {
+    width: 50vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+/* Styling the Sign-in link */
+.signin-link {
+    text-decoration: none;
+    color: rgb(0, 38, 255);
+}
+
+/* Styling OAuth register buttons */
+.oauth-register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.oauth-register button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background-color: white;
+    border-radius: 8px;
+    height: auto;
+    width: 160px;
+    padding: 10px;
+    border: solid rgba(137, 131, 131, 0.2) 1px;
+    cursor: pointer;
+}
+
+.oauth-register button > span {
+    font-size: 12px;
+}
+
+.signin {
+    font-size: 13px;
+}
+
+.btn-logo {
+    width: 20px;
+    height: 20px;
+}

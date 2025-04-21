@@ -1,0 +1,37 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.table-container{
+    font-family: "Poppins", sans-serif;
+    width: 100%;
+    border-spacing: 0;
+}
+
+.table-header{
+    background-color: rgb(231, 231, 231); 
+}
+.table-header-items{
+    padding: 18px;
+}
+
+.table-body{
+    text-align: center;
+}
+
+.table-body-items{
+    padding: 18px;
+}
+
+.icon-button{
+    width: 20px;
+    height: 20px;
+}
+
+.edit-button,.delete-button{
+    padding: 12px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}

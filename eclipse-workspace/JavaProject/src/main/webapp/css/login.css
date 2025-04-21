@@ -105,7 +105,6 @@ form{
  height: 20px;
  width: 20px;
 }
-
 /* boilerplate and adding gap between the buttons */
 .oauth-login{
     display: flex;
@@ -137,7 +136,7 @@ form{
 .forgot-password{
     text-decoration: none;
     color: black;
-    font-size: 12px;
+    font-size: 10px;
     text-align: end;
 }
 /* setting border appearance */
@@ -156,11 +155,15 @@ form{
     cursor: pointer;
 }
 
+.oauth-login button > span {
+    font-size: 12px;
+}
+
 .signup-link{
     text-decoration: none;
     color: rgb(0, 38, 255);
 }
 
-.btn-text{
-	font-size:12px;
+.signup{
+	font-size:13px;
 }

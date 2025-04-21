@@ -1,0 +1,107 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+body{
+    background-color: rgb(249, 249, 249);
+}
+
+
+.product-listing-container{
+    display: flex;
+    gap: 2px;
+}
+
+.product-details{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.search-icon{
+    height: 20px;
+    width: 20px;
+}
+
+.product-navbar{
+    height: 8vh;
+    width: 75vw;
+    padding: 15px 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.search-icon{
+    position: relative;
+    left: -30px;
+    bottom: 0px;
+}
+.search-input{
+    border: 1px solid;
+    outline: none;
+    font-size: 16px;
+    padding: 8px 10px;
+    border-radius: 999px;
+}
+
+.product-categories{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 15px 0 15px;
+    height: 95vh;
+    width: 20vw;
+}
+
+.product-category-header{
+    text-align:center;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 10px;
+}
+
+.product-category-container{
+    background-color: white;
+    border-radius: 6px;
+    border: 1px solid rgb(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+    padding: 15px 10px;   
+    width: 200px;
+}
+
+.product-category{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 5px;  
+}
+
+.filter-button{
+    background-color: black;
+    color: white;
+    font-weight: 650;
+    border-radius: 6px;
+    padding: 8px 10px;
+
+}
+
+.product-list{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0px 15px;
+    height: 85vh;
+    width: 70vw;
+}
+
+
+.checkbox{
+    height: 20px;
+    width: 20px;
+    accent-color: white;
+    background-color: black;
+}

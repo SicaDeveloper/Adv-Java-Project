@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,9 +20,7 @@
             text-align: center;
             background-color: #fff;
             width: 100%;
-            position: fixed;
             bottom: 0;
-            
             padding-top: 80px;
 
         }
@@ -35,7 +32,6 @@
             align-items: center;
             font-size: 16px;
             font-weight:bold;
-            
             margin: 0 auto;
             max-width: 60%;
         }
@@ -92,24 +88,24 @@
     <footer class="footer">
         <div class="usefull-links">
 
-            <a href="#">Product</a>
-            <a href="#">Feature</a>
-            <a href="#">Resource</a>
-            <a href="#" class="trade">Trade</a>
-            <a href="#">About</a>
-            <a href="#">Blog</a>
-            <a href="#">Support</a>
+            <a href="${pageContext.request.contextPath}/products">Product</a>
+            <a href="${pageContext.request.contextPath}/features">Feature</a>
+            <a href="${pageContext.request.contextPath}/resources">Resource</a>
+            <a href="${pageContext.request.contextPath}/trade" class="trade">Trade</a>
+            <a href="${pageContext.request.contextPath}/aboutus">About</a>
+            <a href="${pageContext.request.contextPath}/blog">Blog</a>
+            <a href="${pageContext.request.contextPath}/support">Support</a>
 
         </div>
 
         <div class="line"></div>
 
         <div class="footer-icons">
-            <a href="#"><img src="/resource/instagram_2111463.png" alt="Instagram"></a>
-            <a href="#"><img src="/resource/twitter_5969020.png" alt="X"></a>
-            <a href="#"><img src="/resource/facebook_5968764.png" alt="Facebook"></a>
-            <a href="#"><img src="/resource/youtube_4494485.png" alt="Youtube"></a>
-            <a href="#"><img src="/resource/whatsapp_733585.png" alt="Whatsapp"></a>
+            <a href="#"><img src="${pageContext.request.contextPath}/resource/instagram_2111463.png" alt="Instagram"></a>
+            <a href="#"><img src="${pageContext.request.contextPath}/resource/twitter_5969020.png" alt="X"></a>
+            <a href="#"><img src="${pageContext.request.contextPath}/resource/facebook_5968764.png" alt="Facebook"></a>
+            <a href="#"><img src="${pageContext.request.contextPath}/resource/youtube_4494485.png" alt="Youtube"></a>
+            <a href="#"><img src="${pageContext.request.contextPath}/resource/whatsapp_733585.png" alt="Whatsapp"></a>
         </div>
         <div class="copyright">
             <p>&copy; 2010 &ndash; 2020 Privacy &ndash; Terms</p>
