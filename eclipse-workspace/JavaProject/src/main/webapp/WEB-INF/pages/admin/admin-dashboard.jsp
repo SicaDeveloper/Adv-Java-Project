@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Insert title here</title>
-		<link rel="stylesheet" href="../../css/admin-dashboard.css" />
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-dashboard.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -16,12 +16,12 @@
 		<div class="dashboard-container">
 			<div class="dashboard-sidebar">
 				<div class="sidebar-items">
-                    <button class="sidebar-logo"><img src="" alt="" />TEMPEST</button>
-					<button class="sidebar-item"><img src="" alt="" />Products</button>
-					<button class="sidebar-item"><img src="" alt="" />Orders</button>
-					<button class="sidebar-item"><img src="" alt="" />Customers</button>
-					<button class="sidebar-item"><img src="" alt="" />Analytics</button>
-					<button class="sidebar-item"><img src="" alt="" />Settings</button>
+                    <button class="sidebar-logo"><img src="${pageContext.request.contextPath}/resource/dashboard.svg" alt="" />TEMPEST</button>
+					<button class="sidebar-item"><img src="${pageContext.request.contextPath}/resource/shopping_cart.svg" alt="" />Products</button>
+					<button class="sidebar-item"><img src="${pageContext.request.contextPath}/resource/person.svg" alt="" />Orders</button>
+					<button class="sidebar-item"><img src="${pageContext.request.contextPath}/resource/" alt="" />Customers</button>
+					<button class="sidebar-item"><img src="${pageContext.request.contextPath}/resource/" alt="" />Analytics</button>
+					<button class="sidebar-item"><img src="${pageContext.request.contextPath}/resource/" alt="" />Settings</button>
 				</div>
 				
 			</div>
