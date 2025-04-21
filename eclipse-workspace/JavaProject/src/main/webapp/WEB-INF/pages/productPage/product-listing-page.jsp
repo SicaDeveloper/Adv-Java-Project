@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title></title>
 </head>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/product-card.css">
 <body>
 <jsp:include page="../homePage/navbar.jsp"></jsp:include>
 <jsp:include page="product-listing.jsp"></jsp:include>

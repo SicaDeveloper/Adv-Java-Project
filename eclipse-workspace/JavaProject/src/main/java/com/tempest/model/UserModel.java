@@ -15,14 +15,27 @@ public class UserModel {
     private String address;
     private String password;
     private Roles role;
-
+    
+    
     public UserModel(String gmail, String password) {
         this.gmail = gmail;
         this.password = password;
     }
+
+    public UserModel(String gmail, String password, Roles role) {
+        this.gmail = gmail;
+        this.password = password;
+        this.role = role;
+    }
     
-    public UserModel() {
-    	
+    public UserModel(String first_name,String last_name, String gmail, String password, String phone, String address, Roles role) {
+    	this.first_name = first_name;
+    	this.last_name = last_name;
+    	this.gmail = gmail;
+    	this.phone = phone;
+    	this.address = address;
+    	this.password = password;
+    	this.role = role;
     }
 
     // Getter for user_id

@@ -20,16 +20,19 @@ pageEncoding="UTF-8"%>
 			<div class="featured-products">
 				<div class="featured-products-title">Featured Products</div>
 				<div class="featured-product-list">
-					<c:forEach var="products" items="${product}">
-						<jsp:include page="${pageContext.request.contextPath}/productPage/product-card.jsp">
-							<jsp:param name="name" value="${product.name}"/>
-							<jsp:param name="price" value="${product.price}"/>
-							<jsp:param name="imageUrl" value="${product.imageUrl}"/>
-							<jsp:param name="linkUrl" value="productDetails.jsp?id=${product.id}"/>
+					<c:forEach var="featuredProducts" items="${featuredProducts}">
+						<jsp:include page="../productPage/product-card.jsp">
+							<jsp:param name="name" value="${featuredProducts.name}"/>
+							<jsp:param name="price" value="${featuredProducts.price}"/>
+							<jsp:param name="imageUrl" value="${featuredProducts.imageUrl}"/>
         				</jsp:include>
 					</c:forEach>
 				</div>
-					<button class="shop-now"><a href="${pageContext.request.contextPath}/products">Shop Now</a></button>
+				<div class="shop-now">
+					<a href="${pageContext.request.contextPath}/products">
+					<button class="shop-now-button">Shop Now</button>
+					</a>
+				</div>
 			</div>
 		</div>
 	</body>

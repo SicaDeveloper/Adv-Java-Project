@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8" />
-		<title>Insert title here</title>
+		<title>Admin Dashboard</title>
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-dashboard.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,14 +17,16 @@
 		<div class="dashboard-container">
 			<div class="dashboard-sidebar">
 				<div class="sidebar-items">
-                    <button class="sidebar-logo"><img src="${pageContext.request.contextPath}/resource/dashboard.svg" alt="" />TEMPEST</button>
-					<button class="sidebar-item"><img src="${pageContext.request.contextPath}/resource/shopping_cart.svg" alt="" />Products</button>
-					<button class="sidebar-item"><img src="${pageContext.request.contextPath}/resource/person.svg" alt="" />Orders</button>
-					<button class="sidebar-item"><img src="${pageContext.request.contextPath}/resource/" alt="" />Customers</button>
-					<button class="sidebar-item"><img src="${pageContext.request.contextPath}/resource/" alt="" />Analytics</button>
-					<button class="sidebar-item"><img src="${pageContext.request.contextPath}/resource/" alt="" />Settings</button>
+                    <button class="sidebar-logo">TEMPEST</button>
+					<button class="sidebar-item"><img class="sidebar-item-icon" src="${pageContext.request.contextPath}/resource/shopping_cart.svg" alt="" />Products</button>
+					<button class="sidebar-item"><img class="sidebar-item-icon" src="${pageContext.request.contextPath}/resource/shopping_cart.svg" alt="" />Orders</button>
+					<button class="sidebar-item"><img class="sidebar-item-icon" src="${pageContext.request.contextPath}/resource/person.svg" alt="" />Customers</button>
+					<button class="sidebar-item"><img class="sidebar-item-icon" src="${pageContext.request.contextPath}/resource/" alt="" />Settings</button>
 				</div>
-				
+			</div>
+			<div class="dashboard-main">
+			<jsp:include page="admin-order-management.jsp">
+			</jsp:include>
 			</div>
 		</div>
 	</body>

@@ -14,10 +14,9 @@ public class CookieUtil {
 	}
 	
 	
-	public static Arrays getCookie(HttpServletRequest request, String name) {
+	public static Cookie getCookie(HttpServletRequest request, String name) {
 		if (request.getCookies()!= null) {
-			return Arrays.stream(request.getCookies()).filter(Cookie -> name.equals(cookie.getName())).findFirst().orElse(null);
-					
+			return Arrays.stream(request.getCookies()).filter(Cookie -> name.equals(Cookie.getName())).findFirst().orElse(null);			
 		}
 		return null;
 	}

@@ -6,18 +6,21 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+
+import com.tempest.model.ProductModel;
 
 /**
- * Servlet implementation class TestController
+ * Servlet implementation class CartController
  */
-@WebServlet(asyncSupported = true, urlPatterns = { "/test" })
-public class TestController extends HttpServlet {
+@WebServlet(asyncSupported = true, urlPatterns = { "/cart" })
+public class CartController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public TestController() {
+    public CartController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -27,7 +30,11 @@ public class TestController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.getRequestDispatcher("/WEB-INF/pages/admin/admin-dashboard.jsp").forward(request, response);
+		ArrayList<ProductModel> carts = new ArrayList<>();
+		carts.add(new ProductModel("productName",10, 12));
+		
+		request.setAttribute("cartItems", carts);
+		request.getRequestDispatcher("/WEB-INF/pages/cartPage/cart.jsp").forward(request, response);
 	}
 
 	/**

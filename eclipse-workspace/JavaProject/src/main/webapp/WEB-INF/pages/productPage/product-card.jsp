@@ -8,15 +8,15 @@
 </head>
 <body>
 <div class="product-card">
-	<img class="product-image" src="${param.imageUrl}" alt="" />
+	<img class="product-image" src="${pageContext.request.contextPath}${param.imageUrl}" alt="" />
 		<div class="product-details">
-			<div class="product-name">${param.productName}</div>
-			<div class="product-price">${param.productPrice}</div>
+			<div class="product-name"><a href="${pageContext.request.contextPath}/product-detail/${param.id}">${param.name}</a></div>
+			<div class="product-price">${param.price}</div>
 			<div class="product-actions">
-				<button class="action-button">Buy-now</button>
-				<button class="action-button">Add to Cart</button>
+				<button onclick="" class="action-button">Buy-now</button>
+				<button onclick="" class="action-button">Add to Cart</button>
 			</div>
-	</div>
+		</div>
 </div>
 </body>
 </html>

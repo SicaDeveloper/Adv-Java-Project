@@ -53,10 +53,10 @@ public class LoginService{
 	}
 	
 	private static boolean validatePassword(ResultSet result,UserModel userModel) throws SQLException {
-		String dbUsername = result.getString("username");
+		String dbUsername = result.getString("email");
 		String dbPassword = result.getString("password");
 
-		return dbUsername.equals(UserModel.getUsername())
+		return dbUsername.equals(UserModel.getGmail())
 				&& PasswordUtil.decrypt(dbPassword, dbUsername).equals(userModel.getPassword());
 	}
 }

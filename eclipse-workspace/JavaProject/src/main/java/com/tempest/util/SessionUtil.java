@@ -10,6 +10,21 @@ public class SessionUtil{
 		session.setAttribute(key, value);
 	}
 	
+	public static Object getSession(HttpServletRequest request, String key) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            return session.getAttribute(key);
+        }
+        return null;
+    }
+	
+	public static void removeSession(HttpServletRequest request, String key) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute(key);
+        }
+    }
+	
 	public static void invalidateSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {

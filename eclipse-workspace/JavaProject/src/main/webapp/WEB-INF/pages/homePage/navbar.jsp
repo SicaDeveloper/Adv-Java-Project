@@ -9,7 +9,7 @@
 	<body>
 		<div class="navbar">
 			<div class="logo">
-				<a href="#"
+				<a href="${pageContext.request.contextPath}/home"
 					><img
 						src="${pageContext.request.contextPath}/resource/tempest-high-resolution-logo-transparent.png"
 						alt="Tempest"
@@ -57,7 +57,7 @@
 							/>
 						</g></svg>
           </a>
-				<a href="#"
+				<a href="${pageContext.request.contextPath}/login"
 					><svg
 						class="nav-icon"
 						xmlns="http://www.w3.org/2000/svg"

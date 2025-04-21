@@ -54,7 +54,15 @@
 	color: black;
 	transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
+
 .shop-now{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	padding : 15px 30px;	
+}
+
+.shop-now-button{
 	background-color: black;
 	color: white;
 	padding: 10px 20px;

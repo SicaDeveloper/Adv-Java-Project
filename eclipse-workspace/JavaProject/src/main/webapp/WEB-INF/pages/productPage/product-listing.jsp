@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.tempest.model.ProductModel" %>
 <!DOCTYPE html>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -8,7 +10,6 @@
 		<title>Document</title>
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/product-listing-page.css" />
 	</head>
-	
 	<body>
 		<div class="product-listing-container">
 			<div class="product-categories">
@@ -44,15 +45,15 @@
 						name="search-products"
 						placeholder="Search products"
 						id="search-products"
-					/><img class="search-icon" src="../resource/search.png" alt="" />
+					/><img class="search-icon" src="${pageContext.request.contextPath}/resource/search.png" alt="" />
 				</div>
 				<div class="product-list">
-					<c:forEach var="products" items="${product}">
+					<c:forEach var="product" items="${product}">
 						<jsp:include page="product-card.jsp">
 							<jsp:param name="name" value="${product.name}"/>
 							<jsp:param name="price" value="${product.price}"/>
 							<jsp:param name="imageUrl" value="${product.imageUrl}"/>
-							<jsp:param name="linkUrl" value="productDetails.jsp?id=${product.id}"/>
+							<jsp:param name="linkUrl" value="productDetails.jsp?id=${product.productId}"/>
         				</jsp:include>
 					</c:forEach>
 				</div>

@@ -50,6 +50,7 @@ body{
 .product-categories{
     display: flex;
     flex-direction: column;
+    align-items:center;
     gap: 20px;
     padding: 20px 15px 0 15px;
     height: 95vh;
@@ -91,11 +92,18 @@ body{
 
 .product-list{
     display: flex;
-    flex-direction: column;
+    flex-wrap:wrap;
+    overflow-y:scroll;
     gap: 20px;
     padding: 0px 15px;
     height: 85vh;
     width: 70vw;
+    -ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none
+}
+
+.product-list::-webkit-scrollbar {
+display: none;
 }
 
 

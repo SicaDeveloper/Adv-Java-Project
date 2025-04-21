@@ -5,9 +5,13 @@
 
 .dashboard-container{
     display: flex;
-    flex-direction: row;
+
 }
 
+.dashboard-main{
+	width: 80vw;
+	
+	}
 .dashboard-sidebar{
     width: 300px;
     height: 100vh;
@@ -38,10 +42,13 @@
 .sidebar-item{
     padding: 12px 2px;
     font-family: "Poppins", sans-serif;
-    text-align: center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
     width: 100%;
     background:none;
     border: none;
+    font-size:18px;
 }
 
 .sidebar-item:hover{
@@ -52,13 +59,10 @@
     cursor: pointer;   
 }
 
-.sidebar-item img{
-
+.sidebar-item-icon:hover{
+ background-color:white;
 }
 
-.sidebar-item:active{
-
-}
 
 .dashboard-navbar{
  display: flex;

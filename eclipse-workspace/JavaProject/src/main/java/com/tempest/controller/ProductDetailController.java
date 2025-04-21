@@ -8,16 +8,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Servlet implementation class TestController
+ * Servlet implementation class ProductDetailControler
  */
-@WebServlet(asyncSupported = true, urlPatterns = { "/test" })
-public class TestController extends HttpServlet {
+@WebServlet("/products-detail")
+public class ProductDetailController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public TestController() {
+    public ProductDetailController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -27,7 +27,7 @@ public class TestController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.getRequestDispatcher("/WEB-INF/pages/admin/admin-dashboard.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/pages/productPage/product-detail.jsp").forward(request, response);
 	}
 
 	/**

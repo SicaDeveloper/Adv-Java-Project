@@ -5,7 +5,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Cart Item</title>
-		<link rel="stylesheet" href="../../../css/cart-item.css" />
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/cart-item.css" />
 	</head>
 	<body>
 		<div class="cart-item-container">

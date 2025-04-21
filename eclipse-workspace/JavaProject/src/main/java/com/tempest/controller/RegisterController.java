@@ -6,15 +6,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import com.tempest.model.User;
 import com.tempest.model.UserModel;
+import com.tempest.model.UserModel.Roles;
+import com.tempest.service.RegisterService;
 /**
  * Servlet implementation class RegisterController
  */
 @WebServlet("/register")
 public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -36,13 +37,19 @@ public class RegisterController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		final String first_name = request.getParameter("firstName");
+		final String last_name = request.getParameter("lastName");
+		final String gmail = request.getParameter("email");
+		final String password = request.getParameter("password");
+		final String phone = request.getParameter("phone");
+		final String address = request.getParameter("address");
+		final Roles role = UserModel.Roles.customer;
 		
-		private final String username = request.getParameter("username");
-		private final String password = request.getParameter("password");
+		UserModel currentUser = new UserModel(first_name, last_name, gmail, password, phone, address, role);
 		
-		UserModel currentUser = new UserModel(username, password);
-		currentUser.setRole(UserModel.Roles.customer);
-		
+		if(RegisterService.addCustomer(currentUser)) {
+			request.getRequestDispatcher("/WEB-INF/pages/homePage/home.jsp").forward(request, response);
+		}
 		
 	}
 

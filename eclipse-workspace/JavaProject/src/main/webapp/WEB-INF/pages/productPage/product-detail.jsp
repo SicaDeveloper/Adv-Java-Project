@@ -15,16 +15,16 @@
 				alt="${product.name}"
 			/>
 			<div class="product-detail-info">
-				<div class="product-name">${product.name} temp</div>
-				<div class="product-price">${product.price} 50</div>
-                <div class="product-review">Review <span>5</span></div>
+				<div class="product-name">${product.name}</div>
+				<div class="product-price">${product.price}</div>
+                <div class="product-review">Review </div>
 				<div class="product-quantity">Quantity:</div>
 				<button class="add-to-cart-button">Add to Cart</button>
 			    <button class="buy-now-button">Buy Now</button>
 			    <div class="product-description">
 			    <details>
-			    <summary>
-                    <div class="product-description-title">Description</div>
+			    <summary class="product-description-title">
+                    Description
                 </summary>
                     <div class="product-description-text">${product.description}</div>  
                 </details>
