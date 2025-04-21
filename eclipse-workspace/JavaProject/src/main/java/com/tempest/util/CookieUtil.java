@@ -1,5 +1,7 @@
 package com.tempest.util;
 
+import java.util.Arrays;
+
 import jakarta.servlet.http.*; 
   
 public class CookieUtil {
@@ -12,7 +14,7 @@ public class CookieUtil {
 	}
 	
 	
-	public static void getCookie(HttpServletRequest request, String name) {
+	public static Arrays getCookie(HttpServletRequest request, String name) {
 		if (request.getCookies()!= null) {
 			return Arrays.stream(request.getCookies()).filter(Cookie -> name.equals(cookie.getName())).findFirst().orElse(null);
 					

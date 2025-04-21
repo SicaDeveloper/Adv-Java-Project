@@ -21,7 +21,9 @@ public class UserModel {
         this.password = password;
     }
     
-    public UserModel()
+    public UserModel() {
+    	
+    }
 
     // Getter for user_id
     public int getUser_id() {

@@ -24,7 +24,6 @@ public class RegisterService {
 			System.err.println("Database connection is not available.");
 			return null;
 		}
-		
-		
+		return false;
 	}
 }

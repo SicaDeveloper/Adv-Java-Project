@@ -39,7 +39,7 @@ public class LoginService{
 		}
 
 		try (PreparedStatement statement = dbConnection.prepareStatement(QueryUtil.loginQuery)){
-			statement.setString(1, UserModel.getUsername());
+			statement.setString(1, UserModel.getGmail());
 			ResultSet result = statement.executeQuery();
 			
 			if(result.next()) {
