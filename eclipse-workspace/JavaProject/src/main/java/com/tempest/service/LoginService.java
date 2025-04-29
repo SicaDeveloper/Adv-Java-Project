@@ -21,7 +21,7 @@ public class LoginService{
 	private static boolean isConnectionError = false;
 	
 	
-	public void LoginService() {
+	public LoginService() {
 		try {
 		dbConnection = DbConfig.getDbConnection();
 		
@@ -31,15 +31,16 @@ public class LoginService{
 		}
 	}
 	
-	public static Boolean loginUser(UserModel user){
+	public Boolean loginUser(UserModel user){
 		
 		if(isConnectionError){
 			System.out.println("The system has failed to connect to the database");
 			return false;
 		}
 
-		try (PreparedStatement statement = dbConnection.prepareStatement(QueryUtil.loginQuery)){
-			statement.setString(1, UserModel.getGmail());
+		try{
+			PreparedStatement statement = dbConnection.prepareStatement(QueryUtil.loginQuery);
+			statement.setString(1, user.getEmail());
 			ResultSet result = statement.executeQuery();
 			
 			if(result.next()) {
@@ -56,7 +57,7 @@ public class LoginService{
 		String dbUsername = result.getString("email");
 		String dbPassword = result.getString("password");
 
-		return dbUsername.equals(UserModel.getGmail())
-				&& PasswordUtil.decrypt(dbPassword, dbUsername).equals(userModel.getPassword());
+		return dbUsername.equals(userModel.getEmail())
+				&& dbPassword.equals(userModel.getPassword());
 	}
 }

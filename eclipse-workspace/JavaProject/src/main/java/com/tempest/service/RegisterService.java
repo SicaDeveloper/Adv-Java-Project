@@ -12,19 +12,18 @@ public class RegisterService {
 	private static Connection dbConn;
 	
 	public RegisterService() {
-		
-		try(Connection conn = DbConfig.getDbConnection()){
-			if(conn!= null) {
+		try {
+			dbConn = DbConfig.getDbConnection();
+			if(dbConn != null) {
 				System.out.println("Connection successful");
-				System.out.println("Connected to database" + conn.getCatalog());
-				
+				System.out.println("Connected to database" + dbConn.getCatalog());
 			}
 		} catch (SQLException|ClassNotFoundException e) {
-			e.getMessage();
+			e.printStackTrace();
 		}
 	}
 	
-	public static Boolean addCustomer(UserModel user){
+	public Boolean addCustomer(UserModel user){
 		try {
 			if (dbConn == null) {
 				System.err.println("Database connection is not available.");
@@ -34,26 +33,28 @@ public class RegisterService {
 			e.printStackTrace();
 		}
 		
-		String insertQuery = "INSERT INTO user(first_name, last_name, gmail, password, phone, address, role)" + "VALUES (?,?,?,?,?,?,?)";
+		String insertQuery = "INSERT INTO user(first_name, last_name, email, password, phone, address, role)" + "VALUES (?,?,?,?,?,?,?)";
 
 		try {
 			PreparedStatement insertStmt = dbConn.prepareStatement(insertQuery);
 			
 			insertStmt.setString(1, user.getFirst_name());
 			insertStmt.setString(2, user.getLast_name());
-			insertStmt.setString(3, user.getGmail());
+			insertStmt.setString(3, user.getEmail());
 			insertStmt.setString(4, user.getPassword());
 			insertStmt.setString(5, user.getPhone());
 			insertStmt.setString(6, user.getAddress());
-			insertStmt.setObject(7, user.getRole(), java.sql.Types.OTHER);
+			// Convert enum to string for database storage
+			insertStmt.setString(7, user.getRole().toString());
 			
-			return insertStmt.executeUpdate() > 0;
+			int result = insertStmt.executeUpdate();
+			System.out.println("Insert result: " + result);
+			return result > 0;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Error inserting user: " + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
-		
 	}
 }

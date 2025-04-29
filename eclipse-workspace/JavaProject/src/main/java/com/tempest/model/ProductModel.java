@@ -5,21 +5,22 @@ public class ProductModel{
 	private int id;
 	private String name;
 	private String description;
-	private float price;
+	private double price;
 	private String imageUrl;
 	private int quantity;
 	
-	public ProductModel(String name, int quantity, float price ){
+	public ProductModel(String name, int quantity, double price, String imageUrl){
 		this.name = name;
 		this.price = price;
 		this.quantity = quantity;
 	}
 	
-	public ProductModel(int id, String name, String description,float price,String imageUrl ){
+	public ProductModel(int id, String name, String description,float price,int quantity, String imageUrl ){
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.price = price;
+		this.quantity = quantity;
 		this.imageUrl = imageUrl;
 	}
 	
@@ -39,13 +40,14 @@ public class ProductModel{
     public int getQuantity() {
     	return quantity;
     }
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
+    
 
     // Setter methods
 
@@ -61,8 +63,12 @@ public class ProductModel{
         this.description = description;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
+    }
+    
+    public void setQuantity(int quantity) {
+    	this.quantity = quantity;
     }
 
     public void setImageUrl(String imageUrl) {

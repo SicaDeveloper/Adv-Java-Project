@@ -15,13 +15,14 @@ import com.tempest.service.RegisterService;
 @WebServlet("/register")
 public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private final RegisterService registerService;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public RegisterController() {
         super();
-        // TODO Auto-generated constructor stub
+        this.registerService = new RegisterService();
     }
 
 	/**
@@ -39,18 +40,20 @@ public class RegisterController extends HttpServlet {
 		// TODO Auto-generated method stub
 		final String first_name = request.getParameter("firstName");
 		final String last_name = request.getParameter("lastName");
-		final String gmail = request.getParameter("email");
+		final String email = request.getParameter("email");
 		final String password = request.getParameter("password");
 		final String phone = request.getParameter("phone");
 		final String address = request.getParameter("address");
 		final Roles role = UserModel.Roles.customer;
 		
-		UserModel currentUser = new UserModel(first_name, last_name, gmail, password, phone, address, role);
+		UserModel currentUser = new UserModel(first_name, last_name, email, password, phone, address, role);
 		
-		if(RegisterService.addCustomer(currentUser)) {
-			request.getRequestDispatcher("/WEB-INF/pages/homePage/home.jsp").forward(request, response);
+		if(registerService.addCustomer(currentUser)) {
+			response.sendRedirect(request.getContextPath() + "/login");
+		} else {
+			request.setAttribute("error", "Registration failed. Please try again.");
+			request.getRequestDispatcher("/WEB-INF/pages/loginAndRegistrationPage/register.jsp").forward(request, response);
 		}
-		
 	}
 
 }

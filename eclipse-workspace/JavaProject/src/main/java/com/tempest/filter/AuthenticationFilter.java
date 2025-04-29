@@ -22,8 +22,9 @@ public class AuthenticationFilter implements Filter {
 	private static final String REGISTER = "/register";
 	private static final String HOME = "/home";
 	private static final String ROOT = "/";
-	private static final String DASHBOARD = "/admin-dashboard";
-	private static final String PRODUCT_EDIT = "/product-edit";
+	private static final String DASHBOARD = "/admin/dashboard";
+	private static final String PRODUCT_EDIT = "/product/edit";
+	private static final String PRODUCT_ADD = "/product/add";
 	private static final String PROFILE_UPDATE = "/profile";
 	private static final String ADMIN_ORDER = "/adminOrder";
 	private static final String ABOUT = "/aboutus";
@@ -45,48 +46,51 @@ public class AuthenticationFilter implements Filter {
 		HttpServletResponse res = (HttpServletResponse) response;
 
 		String uri = req.getRequestURI();
+		String contextPath = req.getContextPath();
+		String path = uri.substring(contextPath.length());
 		
 		// Allow access to resources
-		if (uri.endsWith(".png") || uri.endsWith(".jpg") || uri.endsWith(".css")) {
+		if (path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".css") || path.endsWith(".js")) {
 			chain.doFilter(request, response);
 			return;
 		}
 		
-		boolean isLoggedIn = SessionUtil.getSession(req, "gmail") != null;
-		String userRole = CookieUtil.getCookie(req, "role") != null ? CookieUtil.getCookie(req, "role").getValue()
-				: null;
-
-		if ("admin".equals(userRole)) {
-			// Admin is logged in
-			if (uri.endsWith(LOGIN) || uri.endsWith(REGISTER)) {
-				res.sendRedirect(req.getContextPath() + DASHBOARD);
-			} else if (uri.endsWith(DASHBOARD) || uri.endsWith(PRODUCT_EDIT) || uri.endsWith(ADMIN_ORDER) || uri.endsWith(ORDER)
-					|| uri.endsWith(ADMIN_ORDER) || uri.endsWith(HOME) || uri.endsWith(ROOT)) {
-				chain.doFilter(request, response);
-			} else if (uri.endsWith(ORDER_LIST) || uri.endsWith(CART)) {
-				res.sendRedirect(req.getContextPath() + DASHBOARD);
+		boolean isLoggedIn = SessionUtil.getSession(req, "email") != null;
+		String userRole = CookieUtil.getCookie(req, "role") != null ? CookieUtil.getCookie(req, "role").getValue() : null;
+		
+		if(isLoggedIn) {
+			if ("admin".equals(userRole)) {
+				// Admin is logged in
+				if (path.equals(LOGIN) || path.equals(REGISTER)) {
+					res.sendRedirect(contextPath + DASHBOARD);
+				} else if (path.equals(DASHBOARD) || path.equals(PRODUCT_EDIT) || path.equals(ADMIN_ORDER) ||  path.equals(PRODUCT_ADD) ||
+						path.equals(ORDER) || path.equals(HOME) || path.equals(ROOT)) {
+					chain.doFilter(request, response);
+				} else if (path.equals(ORDER_LIST) || path.equals(CART)) {
+					res.sendRedirect(contextPath + DASHBOARD);
+				} else {
+					res.sendRedirect(contextPath + DASHBOARD);
+				}
 			} else {
-				res.sendRedirect(req.getContextPath() + DASHBOARD);
-			}
-		} else if ("user".equals(userRole)) {
-			// User is logged in
-			if (uri.endsWith(LOGIN) || uri.endsWith(REGISTER)) {
-				res.sendRedirect(req.getContextPath() + HOME);
-			} else if (uri.endsWith(HOME) || uri.endsWith(ROOT) || uri.endsWith(ABOUT)
-					|| uri.endsWith(CONTACT) || uri.endsWith(ORDER_LIST) || uri.endsWith(CART)) {
-				chain.doFilter(request, response);
-			} else if (uri.endsWith(DASHBOARD) || uri.endsWith(PROFILE_UPDATE)
-					|| uri.endsWith(ADMIN_ORDER)) {
-				res.sendRedirect(req.getContextPath() + HOME);
-			} else {
-				res.sendRedirect(req.getContextPath() + HOME);
+				// User is logged in
+				if (path.equals(LOGIN) || path.equals(REGISTER)) {
+					res.sendRedirect(contextPath + HOME);
+				} else if (path.equals(HOME) || path.equals(ROOT) || path.equals(ABOUT) ||
+						path.equals(CONTACT) || path.equals(ORDER_LIST) || path.equals(CART)) {
+					chain.doFilter(request, response);
+				} else if (path.equals(DASHBOARD) || path.equals(PROFILE_UPDATE) ||
+						path.equals(ADMIN_ORDER)) {
+					res.sendRedirect(contextPath + HOME);
+				} else {
+					res.sendRedirect(contextPath + HOME);
+				}
 			}
 		} else {
 			// Not logged in
-			if (uri.endsWith(LOGIN) || uri.endsWith(REGISTER) || uri.endsWith(HOME) || uri.endsWith(ROOT)) {
+			if (path.equals(LOGIN) || path.equals(REGISTER) || path.equals(HOME) || path.equals(ROOT)) {
 				chain.doFilter(request, response);
 			} else {
-				res.sendRedirect(req.getContextPath() + LOGIN);
+				res.sendRedirect(contextPath + LOGIN);
 			}
 		}
 	}

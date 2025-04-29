@@ -18,15 +18,14 @@
 			<div class="dashboard-sidebar">
 				<div class="sidebar-items">
                     <button class="sidebar-logo">TEMPEST</button>
-					<button class="sidebar-item"><img class="sidebar-item-icon" src="${pageContext.request.contextPath}/resource/shopping_cart.svg" alt="" />Products</button>
-					<button class="sidebar-item"><img class="sidebar-item-icon" src="${pageContext.request.contextPath}/resource/shopping_cart.svg" alt="" />Orders</button>
-					<button class="sidebar-item"><img class="sidebar-item-icon" src="${pageContext.request.contextPath}/resource/person.svg" alt="" />Customers</button>
-					<button class="sidebar-item"><img class="sidebar-item-icon" src="${pageContext.request.contextPath}/resource/" alt="" />Settings</button>
+					<a href="${pageContext.request.contextPath}/product/add" class="sidebar-item">Products</a>
+					<a href="${pageContext.request.contextPath}" class="sidebar-item">Orders</a>
+					<a href="${pageContext.request.contextPath}" class="sidebar-item">Customers</a>
+					<a href="${pageContext.request.contextPath}" class="sidebar-item">Settings</a>
 				</div>
 			</div>
 			<div class="dashboard-main">
-			<jsp:include page="admin-order-management.jsp">
-			</jsp:include>
+			<jsp:include page="admin-product-management.jsp" />
 			</div>
 		</div>
 	</body>

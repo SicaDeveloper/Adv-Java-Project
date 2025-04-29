@@ -31,7 +31,7 @@ public class CartController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		ArrayList<ProductModel> carts = new ArrayList<>();
-		carts.add(new ProductModel("productName",10, 12));
+		carts.add(new ProductModel("productName",10, 12.00,"String"));
 		
 		request.setAttribute("cartItems", carts);
 		request.getRequestDispatcher("/WEB-INF/pages/cartPage/cart.jsp").forward(request, response);

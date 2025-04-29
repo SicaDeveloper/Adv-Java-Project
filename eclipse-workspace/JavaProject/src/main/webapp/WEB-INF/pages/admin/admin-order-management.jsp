@@ -27,7 +27,7 @@ pageEncoding="UTF-8"%>
 				</tr>
 			</thead>
 			<tbody>
-                <c:forEach var="order" items="${yourListOfItems}" varStatus="loop">
+                <c:forEach var="order" items="${order}" varStatus="loop">
 				    <tr class="table-body">
 				        <td class="table-body-items"><input type="checkbox" name="" id=""></td>
 				        <td class="table-body-items">${order.id}</td>

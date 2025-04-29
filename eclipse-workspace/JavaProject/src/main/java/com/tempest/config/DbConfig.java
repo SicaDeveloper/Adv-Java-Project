@@ -17,15 +17,18 @@ public class DbConfig {
 	}
 	
 	public static void main(String[] args) {
-		try(Connection conn = getDbConnection()){
-			if(conn!= null) {
-				System.out.println("Connection successful");
-				System.out.println("Connected to database" + conn.getCatalog());
-				
-			}
-		} catch (SQLException|ClassNotFoundException e) {
-			e.getMessage();
+		try {
+			Connection connection = DbConfig.getDbConnection();
+			System.out.println("Successfully connected to the database!");
+			// You can perform database operations here using the 'connection' object.
+			connection.close(); // It's crucial to close the connection when done.
+			System.out.println("Database connection closed.");
+		} catch (ClassNotFoundException e) {
+			System.err.println("Error: MySQL JDBC driver not found.");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.err.println("Error: Could not connect to the database.");
+			e.printStackTrace();
 		}
-		
 	}
 }

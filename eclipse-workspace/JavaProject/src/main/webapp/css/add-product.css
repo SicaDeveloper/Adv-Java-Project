@@ -1,0 +1,99 @@
+@charset "UTF-8";
+
+*{
+    margin:0;
+    padding:0;
+}
+/* Main container */
+.add-product-container {
+    /* Add styles for the main container */
+    display:flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Header section */
+.add-product-header {
+	text-align : center;
+	padding: 20px 20px;
+}
+
+.add-product-header h1 {
+    /* Add styles for the header title */
+    font-family : "Poppins", Arial;
+}
+
+/* Form section */
+.product-form {
+    /* Add styles for the form */
+}
+
+/* Product details section */
+.product-details {
+	
+	width: 600px;
+	height: 600px;
+    /* Add styles for the product details container */
+}
+
+.product-details-item {
+	padding:5px;
+    /* Add styles for each product detail item */
+}
+
+.product-details-item label {
+    /* Add styles for labels */
+}
+
+.product-details-item input{
+    /* Add styles for input fields and textarea */
+}
+.product-details-item textarea {
+	
+}
+
+/* Product image section */
+.product-image {
+    /* Add styles for the product image container */
+}
+
+.image-header {
+    /* Add styles for the image header */
+}
+
+#productImage {
+    /* Add styles for the product image */
+}
+
+#productImageInput {
+    /* Add styles for the file input */
+}
+
+/* Product category section */
+.product-category {
+    /* Add styles for the category container */
+}
+
+.product-category label {
+    /* Add styles for the category label */
+}
+
+.product-category select {
+    /* Add styles for the category select dropdown */
+}
+
+/* Submit button */
+.product-form input[type="submit"] {
+    /* Add styles for the submit button */
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    /* Add responsive styles for smaller screens */
+}
+
+@media screen and (max-width: 480px) {
+    /* Add responsive styles for mobile devices */
+}
+

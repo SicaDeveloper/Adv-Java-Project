@@ -10,32 +10,42 @@ public class UserModel {
     private int user_id;
     private String first_name;
     private String last_name;
-    private String gmail;
+    private String email;
     private String phone;
     private String address;
     private String password;
+    private String imageUrl;
     private Roles role;
     
     
-    public UserModel(String gmail, String password) {
-        this.gmail = gmail;
+    public UserModel(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
-    public UserModel(String gmail, String password, Roles role) {
-        this.gmail = gmail;
+    public UserModel(String email, String password, Roles role) {
+        this.email = email;
         this.password = password;
         this.role = role;
     }
     
-    public UserModel(String first_name,String last_name, String gmail, String password, String phone, String address, Roles role) {
+    public UserModel(String first_name,String last_name, String email, String password, String phone, String address, Roles role) {
     	this.first_name = first_name;
     	this.last_name = last_name;
-    	this.gmail = gmail;
+    	this.email = email;
     	this.phone = phone;
     	this.address = address;
     	this.password = password;
     	this.role = role;
+    }
+    
+    public UserModel(String first_name,String last_name, String email, String password, String phone, String address) {
+    	
+    	this.first_name = first_name;
+    	this.last_name = last_name;
+    	this.email = email;
+    	this.phone = phone;
+    	this.address = address;
     }
 
     // Getter for user_id
@@ -53,9 +63,9 @@ public class UserModel {
         return last_name;
     }
 
-    // Getter for gmail
-    public String getGmail() {
-        return gmail;
+    // Getter for email
+    public String getEmail() {
+        return email;
     }
 
     // Getter for phone
@@ -73,6 +83,10 @@ public class UserModel {
         return password;
     }
     
+    public String getProfile() {
+    	return imageUrl;
+    }
+    
     // Setter for first_name
     public void setFirst_name(String first_name) {
         this.first_name = first_name;
@@ -84,8 +98,8 @@ public class UserModel {
     }
 
     // Setter for gmail
-    public void setGmail(String gmail) {
-        this.gmail = gmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     // Setter for phone
@@ -108,5 +122,9 @@ public class UserModel {
 
     public void setRole(Roles role) {
         this.role = role;
+    }
+    
+    public void setProfile(String imageUrl) {
+    	this.imageUrl = imageUrl;
     }
 }

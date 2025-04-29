@@ -8,16 +8,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Servlet implementation class OrderController
+ * Servlet implementation class AdminOrderController
  */
-@WebServlet(asyncSupported = true, urlPatterns = { "/orders" })
-public class OrderController extends HttpServlet {
+@WebServlet(asyncSupported = true, urlPatterns = { "/AdminOrderController" })
+public class AdminOrderController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public OrderController() {
+    public AdminOrderController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -27,7 +27,7 @@ public class OrderController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.getRequestDispatcher("/WEB-INF/pages/orderPage/order-dashboard.jsp").forward(request, response);
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**

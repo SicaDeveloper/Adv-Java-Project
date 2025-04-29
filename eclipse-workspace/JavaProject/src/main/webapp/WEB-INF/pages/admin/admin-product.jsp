@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Tempest | Admin Product Management</title>
-<link rel="stylesheet" href="../css/admin-product-management.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-product-management.css">
 </head>
 <body>
         <table class="product-container">
