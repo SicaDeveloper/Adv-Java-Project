@@ -1,99 +1,195 @@
 @charset "UTF-8";
 
-*{
-    margin:0;
-    padding:0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-/* Main container */
-.add-product-container {
-    /* Add styles for the main container */
-    display:flex;
-    flex-direction: column;
+
+body {
+    background: #f6f7fb;
+}
+
+
+
+.add-product-bg {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: #f6f7fb;
+    padding: 40px 0;
+}
+
+.add-product-main {
+    width: 1200px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.add-product-form {
+    display: flex;
+    gap: 32px;
     width: 100%;
-    height: 100vh;
 }
 
-/* Header section */
-.add-product-header {
-	text-align : center;
-	padding: 20px 20px;
+.add-product-left, .add-product-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
-.add-product-header h1 {
-    /* Add styles for the header title */
-    font-family : "Poppins", Arial;
+.add-product-left {
+    flex: 2;
+}
+.add-product-right {
+    flex: 1;
 }
 
-/* Form section */
-.product-form {
-    /* Add styles for the form */
+.card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    padding: 32px 28px;
+    min-height:354px;
+    margin-bottom: 0;
 }
 
-/* Product details section */
-.product-details {
+.card h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 28px;
+    color: #222;
+}
+.form-group-container{
+	display:flex;
+	gap:20px
+}
+
+.form-group{
+	display:flex;
+	flex-direction:column;
+	gap:20px;
+	width:300px;
 	
-	width: 600px;
-	height: 600px;
-    /* Add styles for the product details container */
 }
 
-.product-details-item {
-	padding:5px;
-    /* Add styles for each product detail item */
+.form-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
 }
 
-.product-details-item label {
-    /* Add styles for labels */
+.form-item label {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 7px;
+    color: #333;
 }
 
-.product-details-item input{
-    /* Add styles for input fields and textarea */
-}
-.product-details-item textarea {
-	
+.form-item input,
+.form-item textarea,
+.form-item select {
+    border: none;
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    color: #222;
+    margin-bottom: 0;
+    outline: none;
+    transition: box-shadow 0.2s;
 }
 
-/* Product image section */
-.product-image {
-    /* Add styles for the product image container */
+.form-item input:focus,
+.form-item textarea:focus,
+.form-item select:focus {
+    box-shadow: 0 0 0 2px #b2f0c0;
 }
 
-.image-header {
-    /* Add styles for the image header */
+.form-row {
+    display: flex;
+    gap: 24px;
+}
+
+.size-options, .gender-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.size-options label, .gender-options label {
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: background 0.2s, border 0.2s;
+}
+
+.pricing-stock .form-row {
+    gap: 24px;
+}
+
+.img-preview {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 18px;
 }
 
 #productImage {
-    /* Add styles for the product image */
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 14px;
+    background: #f3f4f6;
+    border: 1.5px solid #e5e7eb;
 }
 
 #productImageInput {
-    /* Add styles for the file input */
+    margin-top: 8px;
 }
 
-/* Product category section */
-.product-category {
-    /* Add styles for the category container */
+.category-section select {
+    width: 100%;
 }
 
-.product-category label {
-    /* Add styles for the category label */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    justify-content: flex-end;
 }
 
-.product-category select {
-    /* Add styles for the category select dropdown */
+.btn-primary, .btn-secondary {
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
 }
 
-/* Submit button */
-.product-form input[type="submit"] {
-    /* Add styles for the submit button */
+.btn-primary {
+    background: #4ade80;
+    color: #fff;
 }
 
-/* Responsive design */
-@media screen and (max-width: 768px) {
-    /* Add responsive styles for smaller screens */
+.btn-primary:hover {
+    background: #22c55e;
 }
 
-@media screen and (max-width: 480px) {
-    /* Add responsive styles for mobile devices */
+.btn-secondary {
+    background: #f3f4f6;
+    color: #222;
+    border: 1.5px solid #e5e7eb;
 }
 
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
