@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <html>
 <head>
 <meta charset="UTF-8">
@@ -8,7 +9,6 @@ pageEncoding="UTF-8"%>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/add-product.css">
 </head>
 <body>
-<jsp:include page="../homePage/navbar.jsp" />
 <div class="add-product-bg">
     <div class="add-product-main">
         <form class="add-product-form" action="${pageContext.request.contextPath}/product/add" method="post" enctype="multipart/form-data">
@@ -38,8 +38,8 @@ pageEncoding="UTF-8"%>
 	                     <div class="form-item">
 	                        <label for="productCategory">Product Category</label>
 	                        <select id="productCategory" name="productCategory">
-	                        	<c:forEach var="category" category = "${categories}">
-	                            	<option value="${category.value}">${category}</option>
+	                        	<c:forEach var="category" items="${categories}">
+	                            	<option  value="${category.id}">${category.name}</option>
 	                           </c:forEach>
 	                        </select>
 	                    </div>
@@ -56,7 +56,6 @@ pageEncoding="UTF-8"%>
                     <input type="file" id="productImageInput" name="productImageInput">
                 </section>
                 <div class="form-actions">
-                    <button type="button" class="btn-secondary">Save Draft</button>
                     <button type="submit" class="btn-primary">Add Product</button>
                 </div>
             </div>

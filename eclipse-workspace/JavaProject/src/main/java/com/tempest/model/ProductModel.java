@@ -15,7 +15,7 @@ public class ProductModel{
 		this.quantity = quantity;
 	}
 	
-	public ProductModel(int id, String name, String description,float price,int quantity, String imageUrl ){
+	public ProductModel(int id, String name, String description,double price,int quantity, String imageUrl ){
 		this.id = id;
 		this.name = name;
 		this.description = description;

@@ -24,7 +24,7 @@ public class AuthenticationFilter implements Filter {
 	private static final String ROOT = "/";
 	private static final String DASHBOARD = "/admin/dashboard";
 	private static final String PRODUCT_EDIT = "/product/edit";
-	private static final String PRODUCT_ADD = "/product/add";
+	private static final String PRODUCT_ADD = "/admin/product/add";
 	private static final String PROFILE_UPDATE = "/profile";
 	private static final String ADMIN_ORDER = "/adminOrder";
 	private static final String ABOUT = "/aboutus";

@@ -7,22 +7,29 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.tempest.model.CategoriesModel;
+import com.tempest.service.CategoriesServices;
 
 /**
  * Servlet implementation class AddProductController
  */
-@WebServlet(asyncSupported = true, urlPatterns = { "/product/add" })
+@WebServlet(asyncSupported = true, urlPatterns = { "/admin/product/add" })
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
 					maxFileSize = 1024 * 1024 * 10, // 10MB
 					maxRequestSize = 1024 * 1024 * 50) // 50MB
 public class AddProductController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private CategoriesServices categoriesServices;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public AddProductController() {
         super();
+        this.categoriesServices = new CategoriesServices();
         // TODO Auto-generated constructor stub
     }
 
@@ -31,7 +38,12 @@ public class AddProductController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		 request.getRequestDispatcher("/WEB-INF/pages/productPage/add-product.jsp").forward(request, response);
+		
+		List<CategoriesModel> categoryList = categoriesServices.getAllCategoryInfo();
+		
+		request.setAttribute("categories",categoryList);
+		
+		request.getRequestDispatcher("/WEB-INF/pages/productPage/add-product.jsp").forward(request, response);
 	}
 
 	/**
@@ -39,7 +51,16 @@ public class AddProductController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		String product_name = request.getParameter("productName");
+		String product_description = request.getParameter("productDescription");
+		int stock = Integer.parseInt(request.getParameter("productQuantity"));
+		double price  = Double.parseDouble(request.getParameter("productPrice"));
+		String category  = request.getParameter("productCategory");
+		
+		
+		
+		
+		
 	}
 
 }

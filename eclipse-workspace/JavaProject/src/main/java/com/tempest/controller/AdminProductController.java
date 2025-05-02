@@ -11,21 +11,25 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.tempest.model.OrderModel;
-
+import com.tempest.model.ProductModel;
+import com.tempest.service.ProductService;
 /**
  * Servlet implementation class AdminProductController
  */
-@WebServlet(asyncSupported = true, urlPatterns = { "/admin/product" })
+@WebServlet(asyncSupported = true, urlPatterns = { "" })
 public class AdminProductController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    private ProductService productService;
     /**
      * @see HttpServlet#HttpServlet()
      */
     public AdminProductController() {
         super();
+        
+        this.productService = new ProductService();
         // TODO Auto-generated constructor stub
     }
 
@@ -34,6 +38,9 @@ public class AdminProductController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		List<ProductModel> productList = productService.getAllProductsInfo();
+		
+		request.setAttribute("products", productList);
 		request.getRequestDispatcher("/WEB-INF/pages/admin/admin-dashboard.jsp").forward(request, response);
 	}
 

@@ -1,3 +1,5 @@
+package com.tempest.model;
+
 public class CategoriesModel{
 	
 	private int id;

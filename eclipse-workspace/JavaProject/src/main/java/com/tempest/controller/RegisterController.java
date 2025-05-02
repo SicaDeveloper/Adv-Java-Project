@@ -9,6 +9,7 @@ import java.io.IOException;
 import com.tempest.model.UserModel;
 import com.tempest.model.UserModel.Roles;
 import com.tempest.service.RegisterService;
+import com.tempest.util.PasswordUtil;
 /**
  * Servlet implementation class RegisterController
  */
@@ -38,15 +39,18 @@ public class RegisterController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		final String first_name = request.getParameter("firstName");
-		final String last_name = request.getParameter("lastName");
-		final String email = request.getParameter("email");
-		final String password = request.getParameter("password");
-		final String phone = request.getParameter("phone");
-		final String address = request.getParameter("address");
-		final Roles role = UserModel.Roles.customer;
+		String first_name = request.getParameter("firstName");
+		String last_name = request.getParameter("lastName");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		String phone = request.getParameter("phone");
+		String address = request.getParameter("address");
+		Roles role = UserModel.Roles.customer;
+		
+		password = PasswordUtil.encrypt(email, password);
 		
 		UserModel currentUser = new UserModel(first_name, last_name, email, password, phone, address, role);
+		
 		
 		if(registerService.addCustomer(currentUser)) {
 			response.sendRedirect(request.getContextPath() + "/login");

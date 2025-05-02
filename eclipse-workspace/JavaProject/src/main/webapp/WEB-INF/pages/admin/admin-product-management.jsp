@@ -26,78 +26,19 @@
 				</tr>
 			</thead>
 			<tbody>
+			<c:forEach var="product" items="${products}">
                 <tr class="table-body">
                     <td class="table-body-items"><input type="checkbox" name="" id=""></td>
-                    <td class="table-body-items">1</td>
-                    <td class="table-body-items">Product 1</td>
-                    <td class="table-body-items">Shoes</td>
-                    <td class="table-body-items">$100</td>
-                    <td class="table-body-items">10</td>
+                    <td class="table-body-items">${product.id}</td>
+                    <td class="table-body-items">${product.name}</td>
+                    <td class="table-body-items">${product.category}</td>
+                    <td class="table-body-items">${product.price}</td>
                     <td class="table-body-items">
                         <button class="edit-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt=""></button>
                         <button class="delete-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt=""></button>
                     </td>
                 </tr>
-                <tr class="table-body">
-    <td class="table-body-items"><input type="checkbox" name="" id=""></td>
-    <td class="table-body-items">2</td>
-    <td class="table-body-items">Awesome Gadget X</td>
-    <td class="table-body-items">Electronics</td>
-    <td class="table-body-items">$49.99</td>
-    <td class="table-body-items">5</td>
-    <td class="table-body-items">
-        <button class="edit-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt="Edit"></button>
-        <button class="delete-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt="Delete"></button>
-    </td>
-</tr>
-<tr class="table-body">
-    <td class="table-body-items"><input type="checkbox" name="" id=""></td>
-    <td class="table-body-items">3</td>
-    <td class="table-body-items">Cozy Knit Sweater</td>
-    <td class="table-body-items">Apparel</td>
-    <td class="table-body-items">$75.00</td>
-    <td class="table-body-items">15</td>
-    <td class="table-body-items">
-        <button class="edit-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt="Edit"></button>
-        <button class="delete-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt="Delete"></button>
-    </td>
-</tr>
-<tr class="table-body">
-    <td class="table-body-items"><input type="checkbox" name="" id=""></td>
-    <td class="table-body-items">4</td>
-    <td class="table-body-items">Gourmet Coffee Beans</td>
-    <td class="table-body-items">Grocery</td>
-    <td class="table-body-items">$12.50</td>
-    <td class="table-body-items">20</td>
-    <td class="table-body-items">
-        <button class="edit-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt="Edit"></button>
-        <button class="delete-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt="Delete"></button>
-    </td>
-</tr>
-<tr class="table-body">
-    <td class="table-body-items"><input type="checkbox" name="" id=""></td>
-    <td class="table-body-items">5</td>
-    <td class="table-body-items">Ergonomic Office Chair</td>
-    <td class="table-body-items">Furniture</td>
-    <td class="table-body-items">$299.99</td>
-    <td class="table-body-items">3</td>
-    <td class="table-body-items">
-        <button class="edit-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt="Edit"></button>
-        <button class="delete-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt="Delete"></button>
-    </td>
-</tr>
-<tr class="table-body">
-    <td class="table-body-items"><input type="checkbox" name="" id=""></td>
-    <td class="table-body-items">6</td>
-    <td class="table-body-items">Organic Green Tea</td>
-    <td class="table-body-items">Beverages</td>
-    <td class="table-body-items">$8.75</td>
-    <td class="table-body-items">30</td>
-    <td class="table-body-items">
-        <button class="edit-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt="Edit"></button>
-        <button class="delete-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt="Delete"></button>
-    </td>
-</tr>
+               </c:forEach>
             </tbody>
 		</table>
 	</body>

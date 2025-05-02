@@ -33,7 +33,7 @@ public class LoginService{
 	
 	public Boolean loginUser(UserModel user){
 		
-		if(isConnectionError){
+		if(isConnectionError == true){
 			System.out.println("The system has failed to connect to the database");
 			return false;
 		}
@@ -58,6 +58,6 @@ public class LoginService{
 		String dbPassword = result.getString("password");
 
 		return dbUsername.equals(userModel.getEmail())
-				&& dbPassword.equals(userModel.getPassword());
+				&& PasswordUtil.decrypt(dbPassword, dbUsername).equals(userModel.getPassword());
 	}
 }

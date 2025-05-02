@@ -44,6 +44,8 @@ public class PasswordUtil {
     public static SecretKey getAESKeyFromPassword(char[] password, byte[] salt){
            	try {
            		SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+           		// iterationCount = 65536
+           		// keyLength = 256
            		KeySpec spec = new PBEKeySpec(password, salt, 65536, 256);
            		SecretKey secret = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
            		return secret;
@@ -56,26 +58,33 @@ public class PasswordUtil {
     }
 
     // return a base64 encoded AES encrypted text
-    public static String encrypt(String username, String password){
+    public static String encrypt(String employee_id, String password){
     	try {
-    		byte[] salt = getRandomNonce(SALT_LENGTH_BYTE);
-    		byte[] iv = getRandomNonce(IV_LENGTH_BYTE);
-    		
-    		Cipher encryptionCipher = Cipher.getInstance(ENCRYPT_ALGO);
-    		
-    		SecretKey aesKeyFromPassword = getAESKeyFromPassword(username.toCharArray(), salt);
-    		
-    		encryptionCipher.init(Cipher.ENCRYPT_MODE, aesKeyFromPassword, new GCMParameterSpec(TAG_LENGTH_BIT, iv));
-    		
-    		byte[] cipherText = encryptionCipher.doFinal(password.getBytes());
-  
-    		byte[] cipherTextWithIvSalt = ByteBuffer.allocate(TAG_LENGTH_BIT + SALT_LENGTH_BYTE + IV_LENGTH_BYTE)
+		    // 16 bytes salt
+		    byte[] salt = getRandomNonce(SALT_LENGTH_BYTE);
+		
+		    // GCM recommended 12 bytes iv?
+		    byte[] iv = getRandomNonce(IV_LENGTH_BYTE);
+		
+		    // secret key from password
+		    SecretKey aesKeyFromPassword = getAESKeyFromPassword(employee_id.toCharArray(), salt);
+		
+		    Cipher cipher = Cipher.getInstance(ENCRYPT_ALGO);
+		
+		    // ASE-GCM needs GCMParameterSpec
+		    cipher.init(Cipher.ENCRYPT_MODE, aesKeyFromPassword, new GCMParameterSpec(TAG_LENGTH_BIT, iv));
+		
+		    byte[] cipherText = cipher.doFinal(password.getBytes());
+		
+		    // prefix IV and Salt to cipher text
+		    byte[] cipherTextWithIvSalt = ByteBuffer.allocate(iv.length + salt.length + cipherText.length)
 		            .put(iv)
 		            .put(salt)
 		            .put(cipherText)
 		            .array();
-    		
-    		return Base64.getEncoder().encodeToString(cipherTextWithIvSalt);
+		
+		    // string representation, base64, send this string to other for decryption.
+		    return Base64.getEncoder().encodeToString(cipherTextWithIvSalt);
     	}catch(Exception ex) {
     		return null;
     	}
@@ -86,7 +95,7 @@ public class PasswordUtil {
     public static String decrypt(String encryptedPassword, String username) {
 		try {
 			byte[] decode = Base64.getDecoder().decode(encryptedPassword.getBytes(UTF_8));
-			
+	
 			// get back the iv and salt from the cipher text
 			ByteBuffer bb = ByteBuffer.wrap(decode);
 	

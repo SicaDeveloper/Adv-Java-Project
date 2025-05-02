@@ -1,3 +1,5 @@
+package com.tempest.service;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,11 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tempest.config.DbConfig;
+import com.tempest.model.CategoriesModel;
 import com.tempest.model.ProductModel;
-import com.tempest.model.UserModel;
+import com.tempest.util.ImageUtil;
+
 public class ProductService{
 private static Connection dbConn;
 private boolean isConnectionError = false;
+
+private final ImageUtil imageUtil = new ImageUtil();
 
 	public ProductService() {
 		
@@ -32,30 +38,36 @@ private boolean isConnectionError = false;
 			return null;
 		}
 		
-		  String query = "SELECT student_id, first_name, last_name, program_id, email, number FROM student";
-	        try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+		 String query = "SELECT * from products";
+		  
+	        try(PreparedStatement stmt = dbConn.prepareStatement(query)){
+	        		
 	            ResultSet result = stmt.executeQuery();
 	            List<ProductModel> productList = new ArrayList<>();
+	            
+	            try (PreparedStatement pstmt = dbConn.prepareStatement(query);
+	                    ResultSet rs = pstmt.executeQuery()) {
 
-	            while (result.next()) {
-	                // SQL query to fetch program name based on program_id
-	                try { 
-	                	PreparedStatement programStmt = dbConn.prepareStatement(query);
-	                    programStmt.setInt(1, result.getInt("product_id"));
-	                    ResultSet programResult = programStmt.executeQuery();
-
-
-
-	                    programResult.close(); // Close ResultSet to avoid resource leaks
-	                } catch (SQLException e) {
-	                    // Log and handle exceptions related to program query execution
-	                    e.printStackTrace();
-	                    // Continue to process other students or handle this error appropriately
-	                }
-	            }
-	            return productList;
+	                   // Iterate through the ResultSet and create Category objects
+	                   while (rs.next()) {
+	                       int id = rs.getInt("product_id");
+	                       String name = rs.getString("name");
+	                       String description = rs.getString("description");
+	                       Double price = rs.getDouble("price");
+	                       int quantity = rs.getInt("quantity");
+	                       String imageUrl = rs.getString("imageUrl");
+	                       
+	                       productList.add(new ProductModel(id,name,description,price,quantity,imageUrl));
+	                   }
+	                   return productList;
+	               } catch (SQLException e) { //Should be SQLException
+	                   e.printStackTrace();
+	                   return null;
+	               }
+	        }catch(Exception e) {
+	        	
 	        }
-		
+			return null;	
 	}
 	
 	public Boolean createProduct(ProductModel product) {
@@ -78,6 +90,7 @@ private boolean isConnectionError = false;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	public Boolean removeProduct(ProductModel product) {
@@ -91,6 +104,7 @@ private boolean isConnectionError = false;
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	public Boolean updateProduct(ProductModel product) {
@@ -113,7 +127,7 @@ private boolean isConnectionError = false;
 			PreparedStatement updateStmt = dbConn.prepareStatement(updateQuery);
 			updateStmt.setString(1,product.getName());
 			updateStmt.setString(2,product.getDescription());
-			updateStmt.setFloat(3, product.getPrice());
+			updateStmt.setDouble(3, product.getPrice());
 			updateStmt.setString(4, product.getImageUrl());
 			
 			return updateStmt.executeUpdate() > 0;
@@ -121,5 +135,6 @@ private boolean isConnectionError = false;
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 }

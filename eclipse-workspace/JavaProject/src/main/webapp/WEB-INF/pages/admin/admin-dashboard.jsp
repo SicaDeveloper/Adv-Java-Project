@@ -15,15 +15,7 @@
 	</head>
 	<body>
 		<div class="dashboard-container">
-			<div class="dashboard-sidebar">
-				<div class="sidebar-items">
-                    <button class="sidebar-logo">TEMPEST</button>
-					<a href="${pageContext.request.contextPath}/product/add" class="sidebar-item">Products</a>
-					<a href="${pageContext.request.contextPath}" class="sidebar-item">Orders</a>
-					<a href="${pageContext.request.contextPath}" class="sidebar-item">Customers</a>
-					<a href="${pageContext.request.contextPath}" class="sidebar-item">Settings</a>
-				</div>
-			</div>
+			<jsp:include page="admin-sidebar.jsp" />
 			<div class="dashboard-main">
 			<jsp:include page="admin-product-management.jsp" />
 			</div>
