@@ -17,7 +17,7 @@
 		<div class="dashboard-container">
 			<jsp:include page="admin-sidebar.jsp" />
 			<div class="dashboard-main">
-			<jsp:include page="admin-product-management.jsp" />
+			<jsp:include page="${page}" />
 			</div>
 		</div>
 	</body>

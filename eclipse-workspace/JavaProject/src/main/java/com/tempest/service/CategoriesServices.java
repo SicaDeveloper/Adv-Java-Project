@@ -39,7 +39,7 @@ public class CategoriesServices{
 
             // Iterate through the ResultSet and create Category objects
             while (rs.next()) {
-                int id = rs.getInt("category_id");
+                int id = rs.getInt("id");
                 String name = rs.getString("name");
                 String description = rs.getString("description");
                 categoryList.add(new CategoriesModel(id, name, description)); // Add to the list

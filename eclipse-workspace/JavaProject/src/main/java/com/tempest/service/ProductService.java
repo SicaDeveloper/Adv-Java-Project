@@ -16,14 +16,13 @@ public class ProductService{
 private static Connection dbConn;
 private boolean isConnectionError = false;
 
-private final ImageUtil imageUtil = new ImageUtil();
 
 	public ProductService() {
-		
-		try(Connection conn = DbConfig.getDbConnection()){
-			if(conn!= null) {
+		try{
+			dbConn = DbConfig.getDbConnection();
+			if(dbConn!= null) {
 				System.out.println("Connection successful");
-				System.out.println("Connected to database" + conn.getCatalog());
+				System.out.println("Connected to database" + dbConn.getCatalog());
 				
 			}
 		} catch (SQLException|ClassNotFoundException e) {
@@ -33,24 +32,21 @@ private final ImageUtil imageUtil = new ImageUtil();
 	
 	public List<ProductModel> getAllProductsInfo(){
 		
-		if(isConnectionError) {
+		if(isConnectionError == true) {
 			System.out.println("Connection Error");
 			return null;
 		}
 		
-		 String query = "SELECT * from products";
+		 String query = "SELECT * from product";
 		  
 	        try(PreparedStatement stmt = dbConn.prepareStatement(query)){
 	        		
-	            ResultSet result = stmt.executeQuery();
+	            ResultSet rs = stmt.executeQuery();
 	            List<ProductModel> productList = new ArrayList<>();
-	            
-	            try (PreparedStatement pstmt = dbConn.prepareStatement(query);
-	                    ResultSet rs = pstmt.executeQuery()) {
 
 	                   // Iterate through the ResultSet and create Category objects
 	                   while (rs.next()) {
-	                       int id = rs.getInt("product_id");
+	                       int id = rs.getInt("id");
 	                       String name = rs.getString("name");
 	                       String description = rs.getString("description");
 	                       Double price = rs.getDouble("price");
@@ -62,11 +58,7 @@ private final ImageUtil imageUtil = new ImageUtil();
 	                   return productList;
 	               } catch (SQLException e) { //Should be SQLException
 	                   e.printStackTrace();
-	                   return null;
 	               }
-	        }catch(Exception e) {
-	        	
-	        }
 			return null;	
 	}
 	
@@ -75,7 +67,7 @@ private final ImageUtil imageUtil = new ImageUtil();
 		if(isConnectionError) {
 			System.out.println("Connection Error");
 		}
-		String query = "INSERT INTO products ( name, description, price, quantity, imageUrl)" + " VALUES (?,?,?,?,?);";
+		String query = "INSERT INTO product (name, description, price, quantity, imageUrl)" + " VALUES (?,?,?,?,?);";
 		
 		try{
 			PreparedStatement insertStmt = dbConn.prepareStatement(query);
@@ -85,7 +77,6 @@ private final ImageUtil imageUtil = new ImageUtil();
 			insertStmt.setDouble(3, product.getPrice());
 			insertStmt.setInt(4, product.getQuantity());
 			insertStmt.setString(5, product.getImageUrl());
-			
 			return insertStmt.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -100,7 +91,7 @@ private final ImageUtil imageUtil = new ImageUtil();
 		String query = "DELETE FROM products where id = ?"; 
 		try {
 			PreparedStatement insertStmt = dbConn.prepareStatement(query);
-			insertStmt.setInt(1,product.getProductId());
+			insertStmt.setInt(1,product.getId());
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
@@ -122,7 +113,7 @@ private final ImageUtil imageUtil = new ImageUtil();
 		
 		try(PreparedStatement searchStmt = dbConn.prepareStatement(searchQuery)){
 			
-			searchStmt.setInt(1, product.getProductId());
+			searchStmt.setInt(1, product.getId());
 			
 			PreparedStatement updateStmt = dbConn.prepareStatement(updateQuery);
 			updateStmt.setString(1,product.getName());
@@ -136,5 +127,38 @@ private final ImageUtil imageUtil = new ImageUtil();
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	public String findProductCategory(int productId) {
+		if(isConnectionError) {
+			System.out.println("Connection Error");
+			return null;
+		}
+		
+		String query = "SELECT\r\n"
+				+ "    pc.product_id,\r\n"
+				+ "    pc.category_id AS product_category_id, -- Alias to avoid ambiguity\r\n"
+				+ "    c.category_id,\r\n"
+				+ "    c.category_name\r\n"
+				+ "FROM\r\n"
+				+ "    product_category pc\r\n"
+				+ "JOIN\r\n"
+				+ "    category c ON pc.category_id = c.category_id;";
+		
+		try (PreparedStatement searchStmt = dbConn.prepareStatement(query)) {
+	        searchStmt.setInt(1, productId); // Set the value for the placeholder
+	        ResultSet resultSet = searchStmt.executeQuery();
+
+	        if (resultSet.next()) {
+	            return resultSet.getString("category_name");
+	        } else {
+	            // Product ID not found in product_category table
+	            return null;
+	        }
+
+	    } catch (SQLException e) {
+	        System.err.println("Error executing SQL query: " + e.getMessage());
+	        return null; // Or throw the exception depending on your error handling strategy
+	    }
 	}
 }

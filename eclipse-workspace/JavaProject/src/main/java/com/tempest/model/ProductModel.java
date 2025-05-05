@@ -26,7 +26,15 @@ public class ProductModel{
 	
 	// Getter methods
 
-    public int getProductId() {
+    public ProductModel(String name, String description, double price, int quantity, String imageUrl) {
+		this.name = name;
+		this.description = description;
+		this.quantity = quantity;
+		this.price = price;
+		
+	}
+
+	public int getId() {
         return id;
     }
 
@@ -51,7 +59,7 @@ public class ProductModel{
 
     // Setter methods
 
-    public void setProductId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

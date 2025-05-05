@@ -19,7 +19,7 @@ import com.tempest.service.ProductService;
 /**
  * Servlet implementation class AdminProductController
  */
-@WebServlet(asyncSupported = true, urlPatterns = { "" })
+@WebServlet(asyncSupported = true, urlPatterns = { "/admin/product" })
 public class AdminProductController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private ProductService productService;
@@ -39,8 +39,9 @@ public class AdminProductController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List<ProductModel> productList = productService.getAllProductsInfo();
-		
+		String page = "admin-product-management.jsp";
 		request.setAttribute("products", productList);
+		request.setAttribute("page", page);
 		request.getRequestDispatcher("/WEB-INF/pages/admin/admin-dashboard.jsp").forward(request, response);
 	}
 

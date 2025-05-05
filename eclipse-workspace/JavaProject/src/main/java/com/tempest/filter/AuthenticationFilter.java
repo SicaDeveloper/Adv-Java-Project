@@ -23,8 +23,11 @@ public class AuthenticationFilter implements Filter {
 	private static final String HOME = "/home";
 	private static final String ROOT = "/";
 	private static final String DASHBOARD = "/admin/dashboard";
-	private static final String PRODUCT_EDIT = "/product/edit";
+	private static final String PRODUCT_DASHBOARD = "/admin/product";
+	private static final String PRODUCT_EDIT = "/admin/product/edit";
 	private static final String PRODUCT_ADD = "/admin/product/add";
+	private static final String PRODUCT_UPDATE = "/admin/product/edit";
+	private static final String PRODUCT_DELETE = "/admin/product/add";
 	private static final String PROFILE_UPDATE = "/profile";
 	private static final String ADMIN_ORDER = "/adminOrder";
 	private static final String ABOUT = "/aboutus";
@@ -63,8 +66,9 @@ public class AuthenticationFilter implements Filter {
 				// Admin is logged in
 				if (path.equals(LOGIN) || path.equals(REGISTER)) {
 					res.sendRedirect(contextPath + DASHBOARD);
-				} else if (path.equals(DASHBOARD) || path.equals(PRODUCT_EDIT) || path.equals(ADMIN_ORDER) ||  path.equals(PRODUCT_ADD) ||
-						path.equals(ORDER) || path.equals(HOME) || path.equals(ROOT)) {
+				} else if (path.equals(DASHBOARD) || path.equals(PRODUCT_DASHBOARD) || path.equals(PRODUCT_EDIT) 
+						|| path.equals(PRODUCT_UPDATE) || path.equals(PRODUCT_DELETE) ||  path.equals(PRODUCT_ADD) 
+						|| path.equals(ADMIN_ORDER) || path.equals(ORDER) || path.equals(HOME) || path.equals(ROOT)) {
 					chain.doFilter(request, response);
 				} else if (path.equals(ORDER_LIST) || path.equals(CART)) {
 					res.sendRedirect(contextPath + DASHBOARD);

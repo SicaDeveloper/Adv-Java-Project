@@ -20,6 +20,7 @@
     font-family: "Poppins", sans-serif;
     text-align: center;
     cursor: pointer;
+    text-decoration:none;
 }
 
 .sidebar-item{

@@ -6,12 +6,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.tempest.model.CategoriesModel;
+import com.tempest.model.ProductModel;
 import com.tempest.service.CategoriesServices;
+import com.tempest.service.ProductService;
+import com.tempest.util.ImageUtil;
 
 /**
  * Servlet implementation class AddProductController
@@ -23,6 +28,8 @@ import com.tempest.service.CategoriesServices;
 public class AddProductController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private CategoriesServices categoriesServices;
+	private ProductService productService;
+	private ImageUtil imageUtil;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -30,6 +37,8 @@ public class AddProductController extends HttpServlet {
     public AddProductController() {
         super();
         this.categoriesServices = new CategoriesServices();
+        this.productService = new ProductService();
+        this.imageUtil = new ImageUtil();
         // TODO Auto-generated constructor stub
     }
 
@@ -53,14 +62,21 @@ public class AddProductController extends HttpServlet {
 		// TODO Auto-generated method stub
 		String product_name = request.getParameter("productName");
 		String product_description = request.getParameter("productDescription");
-		int stock = Integer.parseInt(request.getParameter("productQuantity"));
+		int quantity = Integer.parseInt(request.getParameter("productQuantity"));
 		double price  = Double.parseDouble(request.getParameter("productPrice"));
 		String category  = request.getParameter("productCategory");
 		
 		
+		Part image = request.getPart("productImageInput");
+		String imageUrl = imageUtil.getImageNameFromPart(image);
 		
+		ProductModel product = new ProductModel(product_name, product_description, price, quantity, imageUrl);		
 		
+		if(productService.createProduct(product)) {
+			response.sendRedirect(request.getContextPath() + "/admin/dashboard");		
+		}
 		
 	}
+
 
 }

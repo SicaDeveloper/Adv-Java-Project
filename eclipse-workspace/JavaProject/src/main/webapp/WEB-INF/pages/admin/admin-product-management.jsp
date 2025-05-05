@@ -26,20 +26,22 @@
 				</tr>
 			</thead>
 			<tbody>
-			<c:forEach var="product" items="${products}">
+			<c:forEach var="products" items="${products}">
                 <tr class="table-body">
                     <td class="table-body-items"><input type="checkbox" name="" id=""></td>
-                    <td class="table-body-items">${product.id}</td>
-                    <td class="table-body-items">${product.name}</td>
-                    <td class="table-body-items">${product.category}</td>
-                    <td class="table-body-items">${product.price}</td>
+                    <td class="table-body-items">${products.id}</td>
+                    <td class="table-body-items">${products.name}</td>
+                    <td class="table-body-items">${products.description}</td>
+                    <td class="table-body-items">${products.price}</td>
+                    <td class="table-body-items">${products.quantity}</td>
                     <td class="table-body-items">
-                        <button class="edit-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt=""></button>
-                        <button class="delete-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt=""></button>
+                        <a class="edit-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt=""></a>
+                        <a class="delete-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt=""></a>
                     </td>
                 </tr>
                </c:forEach>
             </tbody>
 		</table>
+		<a href="${pageContext.request.contextPath}/admin/product/add" class="add-product-button" href="">Add New Product</a>
 	</body>
 </html>
