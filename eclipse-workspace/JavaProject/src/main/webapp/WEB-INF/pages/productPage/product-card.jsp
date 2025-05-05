@@ -11,7 +11,7 @@
 	<img class="product-image" src="${pageContext.request.contextPath}${param.imageUrl}" alt="" />
 		<div class="product-details">
 			<div class="product-name"><a href="${pageContext.request.contextPath}/product-detail/${param.id}">${param.name}</a></div>
-			<div class="product-price">${param.price}</div>
+			<div class="product-price">$${param.price}</div>
 			<div class="product-actions">
 				<button onclick="" class="action-button">Buy-now</button>
 				<button onclick="" class="action-button">Add to Cart</button>

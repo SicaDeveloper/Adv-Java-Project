@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Servlet implementation class AdminOrderController
  */
-@WebServlet(asyncSupported = true, urlPatterns = { "/AdminOrderController" })
+@WebServlet(asyncSupported = true, urlPatterns = { "/admin/order" })
 public class AdminOrderController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -27,7 +27,10 @@ public class AdminOrderController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		String page = "admin-order-management.jsp";
+		request.setAttribute("page", page);
+		request.getRequestDispatcher("/WEB-INF/pages/admin/admin-dashboard.jsp").forward(request, response);
 	}
 
 	/**

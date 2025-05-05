@@ -8,7 +8,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import com.tempest.model.UserModel;
+import com.tempest.model.UserModel.Roles;
 import com.tempest.service.LoginService;
+import com.tempest.service.UserService;
 import com.tempest.util.CookieUtil;
 import com.tempest.util.SessionUtil;
 /**
@@ -18,12 +20,14 @@ import com.tempest.util.SessionUtil;
 public class LoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final LoginService loginService;
+	private final UserService userService;
     /**
      * @see HttpServlet#HttpServlet()
      */
     public LoginController() {
     	super();
         this.loginService = new LoginService();
+        this.userService = new UserService();
         // TODO Auto-generated constructor stub
     }
 
@@ -50,7 +54,7 @@ public class LoginController extends HttpServlet {
 		
 		if (loginStatus != null && loginStatus) {
 			SessionUtil.CreateSession(request, "email", email);
-			if (email.equals("rajdangol.dev@gmail.com")) {
+			if (userService.getUserRole(email).equals(Roles.admin)) {
 				CookieUtil.addCookie(response, "role", "admin", 5 * 30 * 30);
 				response.sendRedirect(request.getContextPath() + "/admin/dashboard"); // Redirect to /home
 			} else {

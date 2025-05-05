@@ -26,14 +26,5 @@
             <a href="${pageContext.request.contextPath}/WEB-INF/pages/orderPage/orders.jsp" class="view-orders-btn">Go to Orders</a>
         </section>
     </main>
-
-    <script>
-        // Example JavaScript to handle form submission
-        document.getElementById('orderForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            alert('Order created successfully!');
-            document.getElementById('orderForm').reset();
-        });
-    </script>
 </body>
 </html>

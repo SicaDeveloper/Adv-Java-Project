@@ -20,12 +20,7 @@ private boolean isConnectionError = false;
 	public ProductService() {
 		try{
 			dbConn = DbConfig.getDbConnection();
-			if(dbConn!= null) {
-				System.out.println("Connection successful");
-				System.out.println("Connected to database" + dbConn.getCatalog());
-				
-			}
-		} catch (SQLException|ClassNotFoundException e) {
+			} catch (SQLException|ClassNotFoundException e) {
 			e.getMessage();
 		}
 	}
@@ -67,7 +62,7 @@ private boolean isConnectionError = false;
 		if(isConnectionError) {
 			System.out.println("Connection Error");
 		}
-		String query = "INSERT INTO product (name, description, price, quantity, imageUrl)" + " VALUES (?,?,?,?,?);";
+		String query = "INSERT INTO product (name, description, price, quantity, imageUrl) VALUES (?,?,?,?,?);";
 		
 		try{
 			PreparedStatement insertStmt = dbConn.prepareStatement(query);
@@ -77,6 +72,7 @@ private boolean isConnectionError = false;
 			insertStmt.setDouble(3, product.getPrice());
 			insertStmt.setInt(4, product.getQuantity());
 			insertStmt.setString(5, product.getImageUrl());
+		
 			return insertStmt.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -137,7 +133,7 @@ private boolean isConnectionError = false;
 		
 		String query = "SELECT\r\n"
 				+ "    pc.product_id,\r\n"
-				+ "    pc.category_id AS product_category_id, -- Alias to avoid ambiguity\r\n"
+				+ "    pc.category_id AS product_category_id,\r\n"
 				+ "    c.category_id,\r\n"
 				+ "    c.category_name\r\n"
 				+ "FROM\r\n"
@@ -161,4 +157,83 @@ private boolean isConnectionError = false;
 	        return null; // Or throw the exception depending on your error handling strategy
 	    }
 	}
+	
+	public ProductModel getProductById(int productId) {
+		if(isConnectionError) {
+			System.out.println("Connection Error");
+			return null;
+		}
+		
+		String query = "SELECT p.*, pc.category_id FROM product p " +
+					  "LEFT JOIN product_category pc ON p.id = pc.product_id " +
+					  "WHERE p.id = ?";
+		
+		try(PreparedStatement searchStmt = dbConn.prepareStatement(query)){
+			searchStmt.setInt(1, productId);
+			ResultSet resultSet = searchStmt.executeQuery();
+			
+			if (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String description = resultSet.getString("description");
+				Double price = resultSet.getDouble("price");
+				int quantity = resultSet.getInt("quantity");
+				String imageUrl = resultSet.getString("imageUrl");
+				int categoryId = resultSet.getInt("category_id");
+				
+				ProductModel product = new ProductModel(id, name, description, price, quantity, imageUrl);
+				product.setCategoryId(categoryId);
+				return product;
+			}
+			return null;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public Boolean updateProductCategory(int productId, int categoryId) {
+	    if(isConnectionError) {
+	        System.out.println("Connection Error");
+	        return false;
+	    }
+	    
+	    String query = "UPDATE product_category SET category_id = ? WHERE product_id = ?";
+	    
+	    try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+	        stmt.setInt(1, categoryId);
+	        stmt.setInt(2, productId);
+	        return stmt.executeUpdate() > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	public CategoriesModel getProductCategory(int productId) {
+        if(isConnectionError) {
+            System.out.println("Connection Error");
+            return null;
+        }
+        
+        String query = "SELECT c.* FROM category c " +
+                      "JOIN product_category pc ON c.id = pc.category_id " +
+                      "WHERE pc.product_id = ?";
+        
+        try(PreparedStatement stmt = dbConn.prepareStatement(query)) {
+            stmt.setInt(1, productId);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                return new CategoriesModel(id, name, description);
+            }
+            return null;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

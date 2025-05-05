@@ -5,9 +5,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import com.tempest.model.ProductModel;
+import com.tempest.service.ProductService;
 
 /**
  * Servlet implementation class HomeController
@@ -15,32 +16,22 @@ import com.tempest.model.ProductModel;
 @WebServlet(asyncSupported = true, urlPatterns = { "/Home", "/" })
 public class HomeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+    private ProductService productService;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public HomeController() {
         super();
-        // TODO Auto-generated constructor stub
+        this.productService = new ProductService();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		ArrayList<ProductModel> products = new ArrayList<>();
-        products.add(new ProductModel(1,"Nike Shoes", "These are nike shoes and they are very cool", 30, 20, "/resource/W+NK+24.7+DF+HZ+TOP+SOFT+KNIT.avif")); // Assuming ProductModel has an ID
-        products.add(new ProductModel(2,"Adidas T-Shirt", "Comfortable sports t-shirt", 20, 20, "/resource/W+NK+24.7+DF+HZ+TOP+SOFT+KNIT.avif"));
-        products.add(new ProductModel(3,"Adidas T-Shirt", "Comfortable sports t-shirt", 20, 20, "/resource/W+NK+24.7+DF+HZ+TOP+SOFT+KNIT.avif"));
-        products.add(new ProductModel(4,"Adidas T-Shirt", "Comfortable sports t-shirt", 20, 20, "/resource/W+NK+24.7+DF+HZ+TOP+SOFT+KNIT.avif"));
-        products.add(new ProductModel(5,"Adidas T-Shirt", "Comfortable sports t-shirt", 20, 20, "/resource/W+NK+24.7+DF+HZ+TOP+SOFT+KNIT.avif"));
-        products.add(new ProductModel(6,"Adidas T-Shirt", "Comfortable sports t-shirt", 20, 20, "/resource/W+NK+24.7+DF+HZ+TOP+SOFT+KNIT.avif"));
-        // Add more ProductModel objects here
-
-        // Set the list as a request attribute
+		List<ProductModel> products = productService.getAllProductsInfo();
         request.setAttribute("featuredProducts", products);
-        
 		request.getRequestDispatcher("/WEB-INF/pages/homePage/home.jsp").forward(request, response);
 	}
 
@@ -48,8 +39,6 @@ public class HomeController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
 }

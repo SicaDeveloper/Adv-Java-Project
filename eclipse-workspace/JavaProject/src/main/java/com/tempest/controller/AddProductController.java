@@ -48,11 +48,16 @@ public class AddProductController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
+		
 		List<CategoriesModel> categoryList = categoriesServices.getAllCategoryInfo();
 		
 		request.setAttribute("categories",categoryList);
 		
-		request.getRequestDispatcher("/WEB-INF/pages/productPage/add-product.jsp").forward(request, response);
+		String page = "/WEB-INF/pages/productPage/add-product.jsp";
+		
+		request.setAttribute("page", page);
+		
+		request.getRequestDispatcher("/WEB-INF/pages/admin/admin-dashboard.jsp").forward(request, response);
 	}
 
 	/**
@@ -65,17 +70,24 @@ public class AddProductController extends HttpServlet {
 		int quantity = Integer.parseInt(request.getParameter("productQuantity"));
 		double price  = Double.parseDouble(request.getParameter("productPrice"));
 		String category  = request.getParameter("productCategory");
-		
-		
+		String imageUrl;
 		Part image = request.getPart("productImageInput");
-		String imageUrl = imageUtil.getImageNameFromPart(image);
+		String imageName = imageUtil.getImageNameFromPart(image);
 		
-		ProductModel product = new ProductModel(product_name, product_description, price, quantity, imageUrl);		
-		
-		if(productService.createProduct(product)) {
-			response.sendRedirect(request.getContextPath() + "/admin/dashboard");		
+		// Upload the image to the products directory
+		String rootPath = request.getServletContext().getRealPath("/");
+		if (imageUtil.uploadImage(image, rootPath, "products")) {
+			// Construct the full image URL path
+			imageUrl = request.getContextPath() + "/resource/images/products/" + imageName;
+			ProductModel product = new ProductModel(product_name, product_description, price, quantity, imageUrl);	
+			if (productService.createProduct(product)) {
+				response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+			} else {
+				request.setAttribute("error", "Failed to create product");
+			}
+		} else {
+			request.setAttribute("error", "Failed to upload product image");
 		}
-		
 	}
 
 

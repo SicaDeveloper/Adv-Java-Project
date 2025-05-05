@@ -41,6 +41,7 @@ public class AdminProductController extends HttpServlet {
 		List<ProductModel> productList = productService.getAllProductsInfo();
 		String page = "admin-product-management.jsp";
 		request.setAttribute("products", productList);
+		request.setAttribute("productService", productService);
 		request.setAttribute("page", page);
 		request.getRequestDispatcher("/WEB-INF/pages/admin/admin-dashboard.jsp").forward(request, response);
 	}

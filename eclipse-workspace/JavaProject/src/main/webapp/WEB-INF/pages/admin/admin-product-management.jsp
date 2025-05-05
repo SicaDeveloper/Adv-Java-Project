@@ -13,6 +13,9 @@
 		/>
 	</head>
 	<body>
+		<div class="navigation-bar">
+			
+		</div>
 		<table class="table-container">
 			<thead>
 				<tr class="table-header">
@@ -22,26 +25,35 @@
                     <th class="table-header-items">Category</th>
 					<th class="table-header-items">Price</th>
 					<th class="table-header-items">Quantity</th>
-					<th class="table-header-items"></th>
+					<th class="table-header-items">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
-			<c:forEach var="products" items="${products}">
-                <tr class="table-body">
-                    <td class="table-body-items"><input type="checkbox" name="" id=""></td>
-                    <td class="table-body-items">${products.id}</td>
-                    <td class="table-body-items">${products.name}</td>
-                    <td class="table-body-items">${products.description}</td>
-                    <td class="table-body-items">${products.price}</td>
-                    <td class="table-body-items">${products.quantity}</td>
-                    <td class="table-body-items">
-                        <a class="edit-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt=""></a>
-                        <a class="delete-button"><img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt=""></a>
-                    </td>
-                </tr>
-               </c:forEach>
+				<c:forEach var="products" items="${products}">
+	                <tr class="table-body">
+	                    <td class="table-body-items">
+	                        <input type="checkbox" name="" id="">
+	                    </td>
+	                    <td class="table-body-items">${products.id}</td>
+	                    <td class="table-body-items">${products.name}</td>
+	                    <td class="table-body-items">
+	                        <c:set var="category" value="${productService.getProductCategory(products.id)}" />
+	                        ${category != null ? category.name : 'No Category'}
+	                    </td>
+	                    <td class="table-body-items">${products.price}</td>
+	                    <td class="table-body-items">${products.quantity}</td>
+	                    <td class="table-body-items">
+	                        <a href="${pageContext.request.contextPath}/admin/product/edit?productId=${products.id}" class="edit-button">
+	                            <img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt="Edit">
+	                        </a>
+	                        <a href="${pageContext.request.contextPath}/admin/product/delete?productId=${products.id}" class="delete-button">
+	                            <img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt="Delete">
+	                        </a>
+	                    </td>
+	                </tr>
+	               </c:forEach>
             </tbody>
 		</table>
-		<a href="${pageContext.request.contextPath}/admin/product/add" class="add-product-button" href="">Add New Product</a>
+		<a href="${pageContext.request.contextPath}/admin/product/add" class="add-product-button">Add New Product</a>
 	</body>
 </html>

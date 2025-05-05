@@ -1,3 +1,5 @@
+package com.tempest.model;
+
 public class DeliveryModel {
     private int delivery_id;
     private String delivery_date;
@@ -66,7 +68,6 @@ public class DeliveryModel {
     // Setter for delivery_mode
     public void setDelivery_mode(String delivery_mode) {
         this.delivery_mode = delivery_mode;
-    }
-32	
+    }	
 }
 

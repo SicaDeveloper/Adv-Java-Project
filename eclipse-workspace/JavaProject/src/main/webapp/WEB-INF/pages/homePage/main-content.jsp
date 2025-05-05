@@ -22,6 +22,7 @@ pageEncoding="UTF-8"%>
 				<div class="featured-product-list">
 					<c:forEach var="featuredProducts" items="${featuredProducts}">
 						<jsp:include page="../productPage/product-card.jsp">
+							<jsp:param name="id" value="${featuredProducts.id}"/>
 							<jsp:param name="name" value="${featuredProducts.name}"/>
 							<jsp:param name="price" value="${featuredProducts.price}"/>
 							<jsp:param name="imageUrl" value="${featuredProducts.imageUrl}"/>

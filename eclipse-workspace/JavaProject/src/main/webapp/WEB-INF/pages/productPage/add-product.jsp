@@ -11,7 +11,7 @@ pageEncoding="UTF-8"%>
 <body>
 <div class="add-product-bg">
     <div class="add-product-main">
-        <form class="add-product-form" action="${pageContext.request.contextPath}/product/add" method="post" enctype="multipart/form-data">
+        <form class="add-product-form" action="${pageContext.request.contextPath}/admin/product/add" method="post" enctype="multipart/form-data">
             <div class="add-product-left">
                 <section class="card general-info">
                 <h2>Add Product</h2>
@@ -59,6 +59,7 @@ pageEncoding="UTF-8"%>
                     <button type="submit" class="btn-primary">Add Product</button>
                 </div>
             </div>
+            <div>${error}</div>
         </form>
     </div>
 </div>

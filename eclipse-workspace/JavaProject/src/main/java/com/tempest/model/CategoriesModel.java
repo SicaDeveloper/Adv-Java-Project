@@ -1,7 +1,6 @@
 package com.tempest.model;
 
-public class CategoriesModel{
-	
+public class CategoriesModel {
 	private int id;
 	private String name;
 	private String description;
@@ -35,6 +34,4 @@ public class CategoriesModel{
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	
 }

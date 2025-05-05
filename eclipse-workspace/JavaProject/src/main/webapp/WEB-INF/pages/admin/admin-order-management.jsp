@@ -27,7 +27,7 @@ pageEncoding="UTF-8"%>
 				</tr>
 			</thead>
 			<tbody>
-                <c:forEach var="order" items="${order}" varStatus="loop">
+                <c:forEach var="order" items="${order}">
 				    <tr class="table-body">
 				        <td class="table-body-items"><input type="checkbox" name="" id=""></td>
 				        <td class="table-body-items">${order.id}</td>
@@ -42,9 +42,9 @@ pageEncoding="UTF-8"%>
 					                    <img class="icon-button" src="${pageContext.request.contextPath}/resource/edit-text.png" alt="Edit">
 					                </button>
             				</form>
-				            <form action="deleteOrder" method="post" style="display:inline;">
+				            <form action="deleteOrder" method="post">
 				                <input type="hidden" name="id" value="${order.id}">
-				                <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this order?')">
+				                <button type="submit" class="delete-button" onclick="">
 				                    <img class="icon-button" src="${pageContext.request.contextPath}/resource/trash-bin.png" alt="Delete">
 				                </button>
 				            </form>
@@ -53,6 +53,7 @@ pageEncoding="UTF-8"%>
 				</c:forEach>
             </tbody>
 		</table>
+		<a href="${pageContext.request.contextPath}/admin/product/add" class="add-product-button" href="">Add New Product</a>
 	</body>
 </html>
 

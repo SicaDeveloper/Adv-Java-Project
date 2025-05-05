@@ -26,10 +26,9 @@ public class AuthenticationFilter implements Filter {
 	private static final String PRODUCT_DASHBOARD = "/admin/product";
 	private static final String PRODUCT_EDIT = "/admin/product/edit";
 	private static final String PRODUCT_ADD = "/admin/product/add";
-	private static final String PRODUCT_UPDATE = "/admin/product/edit";
-	private static final String PRODUCT_DELETE = "/admin/product/add";
-	private static final String PROFILE_UPDATE = "/profile";
-	private static final String ADMIN_ORDER = "/adminOrder";
+	private static final String PRODUCT_DELETE = "/admin/product/delete";
+	private static final String ADMIN_ORDER = "/admin/order";
+	private static final String PROFILE_UPDATE = "/profile/update";
 	private static final String ABOUT = "/aboutus";
 	private static final String ORDER = "/orders";
 	private static final String CONTACT = "/contact";
@@ -53,7 +52,7 @@ public class AuthenticationFilter implements Filter {
 		String path = uri.substring(contextPath.length());
 		
 		// Allow access to resources
-		if (path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".css") || path.endsWith(".js")) {
+		if (isResource(path)) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -61,42 +60,80 @@ public class AuthenticationFilter implements Filter {
 		boolean isLoggedIn = SessionUtil.getSession(req, "email") != null;
 		String userRole = CookieUtil.getCookie(req, "role") != null ? CookieUtil.getCookie(req, "role").getValue() : null;
 		
-		if(isLoggedIn) {
-			if ("admin".equals(userRole)) {
-				// Admin is logged in
-				if (path.equals(LOGIN) || path.equals(REGISTER)) {
-					res.sendRedirect(contextPath + DASHBOARD);
-				} else if (path.equals(DASHBOARD) || path.equals(PRODUCT_DASHBOARD) || path.equals(PRODUCT_EDIT) 
-						|| path.equals(PRODUCT_UPDATE) || path.equals(PRODUCT_DELETE) ||  path.equals(PRODUCT_ADD) 
-						|| path.equals(ADMIN_ORDER) || path.equals(ORDER) || path.equals(HOME) || path.equals(ROOT)) {
-					chain.doFilter(request, response);
-				} else if (path.equals(ORDER_LIST) || path.equals(CART)) {
-					res.sendRedirect(contextPath + DASHBOARD);
+		try {
+			if(isLoggedIn) {
+				if ("admin".equals(userRole)) {
+					handleAdminAccess(path, req, res, chain);
 				} else {
-					res.sendRedirect(contextPath + DASHBOARD);
+					handleUserAccess(path, req, res, chain);
 				}
 			} else {
-				// User is logged in
-				if (path.equals(LOGIN) || path.equals(REGISTER)) {
-					res.sendRedirect(contextPath + HOME);
-				} else if (path.equals(HOME) || path.equals(ROOT) || path.equals(ABOUT) ||
-						path.equals(CONTACT) || path.equals(ORDER_LIST) || path.equals(CART)) {
-					chain.doFilter(request, response);
-				} else if (path.equals(DASHBOARD) || path.equals(PROFILE_UPDATE) ||
-						path.equals(ADMIN_ORDER)) {
-					res.sendRedirect(contextPath + HOME);
-				} else {
-					res.sendRedirect(contextPath + HOME);
-				}
+				handlePublicAccess(path, req, res, chain);
 			}
-		} else {
-			// Not logged in
-			if (path.equals(LOGIN) || path.equals(REGISTER) || path.equals(HOME) || path.equals(ROOT)) {
-				chain.doFilter(request, response);
-			} else {
-				res.sendRedirect(contextPath + LOGIN);
-			}
+		} catch (IllegalStateException e) {
+			// If response is already committed, just let the request continue
+			chain.doFilter(request, response);
 		}
+	}
+
+	private boolean isResource(String path) {
+		return path.endsWith(".png") || path.endsWith(".jpg") || 
+			   path.endsWith(".css") || path.endsWith(".js") ||
+			   path.endsWith(".ico") || path.endsWith(".gif");
+	}
+
+	private void handleAdminAccess(String path, HttpServletRequest req, HttpServletResponse res, FilterChain chain) 
+			throws IOException, ServletException {
+		String contextPath = req.getContextPath();
+		
+		if (path.equals(LOGIN) || path.equals(REGISTER)) {
+			res.sendRedirect(contextPath + DASHBOARD);
+		} else if (isAdminPath(path)) {
+			chain.doFilter(req, res);
+		} else {
+			res.sendRedirect(contextPath + DASHBOARD);
+		}
+	}
+
+	private void handleUserAccess(String path, HttpServletRequest req, HttpServletResponse res, FilterChain chain) 
+			throws IOException, ServletException {
+		String contextPath = req.getContextPath();
+		
+		if (path.equals(LOGIN) || path.equals(REGISTER)) {
+			res.sendRedirect(contextPath + HOME);
+		} else if (isUserPath(path)) {
+			chain.doFilter(req, res);
+		} else {
+			res.sendRedirect(contextPath + HOME);
+		}
+	}
+
+	private void handlePublicAccess(String path, HttpServletRequest req, HttpServletResponse res, FilterChain chain) 
+			throws IOException, ServletException {
+		String contextPath = req.getContextPath();
+		
+		if (isPublicPath(path)) {
+			chain.doFilter(req, res);
+		} else {
+			res.sendRedirect(contextPath + LOGIN);
+		}
+	}
+
+	private boolean isAdminPath(String path) {
+		return path.equals(DASHBOARD) || path.equals(PRODUCT_DASHBOARD) || 
+			   path.startsWith(PRODUCT_EDIT) || path.equals(PRODUCT_ADD) || 
+			   path.equals(PRODUCT_DELETE) || path.equals(ADMIN_ORDER) || 
+			   path.equals(ORDER) || path.equals(HOME) || path.equals(ROOT);
+	}
+
+	private boolean isUserPath(String path) {
+		return path.equals(HOME) || path.equals(ROOT) || path.equals(ABOUT) ||
+			   path.equals(CONTACT) || path.equals(ORDER_LIST) || path.equals(CART);
+	}
+
+	private boolean isPublicPath(String path) {
+		return path.equals(LOGIN) || path.equals(REGISTER) || 
+			   path.equals(HOME) || path.equals(ROOT);
 	}
 
 	@Override

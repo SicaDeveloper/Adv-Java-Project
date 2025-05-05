@@ -10,8 +10,6 @@ body {
     background: #f6f7fb;
 }
 
-
-
 .add-product-bg {
     min-height: 100vh;
     display: flex;
@@ -52,7 +50,7 @@ body {
     border-radius: 18px;
     box-shadow: 0 2px 16px rgba(0,0,0,0.06);
     padding: 32px 28px;
-    min-height:354px;
+    min-height:429px;
     margin-bottom: 0;
 }
 
@@ -176,7 +174,7 @@ body {
 }
 
 .btn-primary {
-    background: #4ade80;
+    background: #03AC13;
     color: #fff;
 }
 
