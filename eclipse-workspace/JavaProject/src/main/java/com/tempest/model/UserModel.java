@@ -7,7 +7,7 @@ public class UserModel {
         customer
     }
 
-    private int user_id;
+    private int id;
     private String first_name;
     private String last_name;
     private String email;
@@ -27,6 +27,17 @@ public class UserModel {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+    
+    public UserModel(int id,String first_name,String last_name, String email, String password, String phone, String address, Roles role) {
+    	this.id = id;
+    	this.first_name = first_name;
+    	this.last_name = last_name;
+    	this.email = email;
+    	this.phone = phone;
+    	this.address = address;
+    	this.password = password;
+    	this.role = role;
     }
     
     public UserModel(String first_name,String last_name, String email, String password, String phone, String address, Roles role) {
@@ -87,6 +98,11 @@ public class UserModel {
     	return imageUrl;
     }
     
+    // Setter for user_id
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
     // Setter for first_name
     public void setFirst_name(String first_name) {
         this.first_name = first_name;

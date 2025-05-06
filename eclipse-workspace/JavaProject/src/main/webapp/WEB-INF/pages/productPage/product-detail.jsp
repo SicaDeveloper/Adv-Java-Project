@@ -19,7 +19,10 @@
 				<div class="product-price">${product.price}</div>
                 <div class="product-review">Review </div>
 				<div class="product-quantity">Quantity:</div>
-				<button class="add-to-cart-button">Add to Cart</button>
+				<form action="${pageContext.request.contextPath}/cart/add" method="post" style="display: inline;">
+					<input type="hidden" name="productId" value="${product.id}">
+					<button type="submit" class="add-to-cart-button">Add to Cart</button>
+				</form>
 			    <button class="buy-now-button">Buy Now</button>
 			    <div class="product-description">
 			    <details>

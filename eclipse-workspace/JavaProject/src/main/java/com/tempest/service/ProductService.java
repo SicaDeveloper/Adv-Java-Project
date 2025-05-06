@@ -5,16 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.tempest.config.DbConfig;
 import com.tempest.model.CategoriesModel;
 import com.tempest.model.ProductModel;
-import com.tempest.util.ImageUtil;
 
 public class ProductService{
-private static Connection dbConn;
-private boolean isConnectionError = false;
+	private static Connection dbConn;
+	private boolean isConnectionError = false;
 
 
 	public ProductService() {
@@ -32,97 +32,226 @@ private boolean isConnectionError = false;
 			return null;
 		}
 		
-		 String query = "SELECT * from product";
-		  
-	        try(PreparedStatement stmt = dbConn.prepareStatement(query)){
-	        		
-	            ResultSet rs = stmt.executeQuery();
-	            List<ProductModel> productList = new ArrayList<>();
+		String query = "SELECT p.*, pc.category_id FROM product p " +
+					  "LEFT JOIN product_category pc ON p.id = pc.product_id";
+		
+		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+			ResultSet rs = stmt.executeQuery();
+			List<ProductModel> productList = new ArrayList<>();
 
-	                   // Iterate through the ResultSet and create Category objects
-	                   while (rs.next()) {
-	                       int id = rs.getInt("id");
-	                       String name = rs.getString("name");
-	                       String description = rs.getString("description");
-	                       Double price = rs.getDouble("price");
-	                       int quantity = rs.getInt("quantity");
-	                       String imageUrl = rs.getString("imageUrl");
-	                       
-	                       productList.add(new ProductModel(id,name,description,price,quantity,imageUrl));
-	                   }
-	                   return productList;
-	               } catch (SQLException e) { //Should be SQLException
-	                   e.printStackTrace();
-	               }
-			return null;	
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String name = rs.getString("name");
+				String description = rs.getString("description");
+				Double price = rs.getDouble("price");
+				int quantity = rs.getInt("quantity");
+				String imageUrl = rs.getString("imageUrl");
+				int categoryId = rs.getInt("category_id");
+				
+				ProductModel product = new ProductModel(id, name, description, price, quantity, imageUrl);
+				product.setCategoryId(categoryId);
+				productList.add(product);
+			}
+			return productList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;	
 	}
 	
 	public Boolean createProduct(ProductModel product) {
 		
 		if(isConnectionError) {
 			System.out.println("Connection Error");
+			return false;
 		}
-		String query = "INSERT INTO product (name, description, price, quantity, imageUrl) VALUES (?,?,?,?,?);";
 		
-		try{
-			PreparedStatement insertStmt = dbConn.prepareStatement(query);
+		try {
+			// Start transaction
+			dbConn.setAutoCommit(false);
 
-			insertStmt.setString(1, product.getName());
-			insertStmt.setString(2, product.getDescription());
-			insertStmt.setDouble(3, product.getPrice());
-			insertStmt.setInt(4, product.getQuantity());
-			insertStmt.setString(5, product.getImageUrl());
-		
-			return insertStmt.executeUpdate() > 0;
+			// Insert product
+			String productQuery = "INSERT INTO product (name, description, price, quantity, imageUrl) VALUES (?,?,?,?,?)";
+			try (PreparedStatement productStmt = dbConn.prepareStatement(productQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
+				productStmt.setString(1, product.getName());
+				productStmt.setString(2, product.getDescription());
+				productStmt.setDouble(3, product.getPrice());
+				productStmt.setInt(4, product.getQuantity());
+				productStmt.setString(5, product.getImageUrl());
+
+				int affectedRows = productStmt.executeUpdate();
+				if (affectedRows == 0) {
+					dbConn.rollback();
+					return false;
+				}
+
+				// Get the generated product ID
+				try (ResultSet generatedKeys = productStmt.getGeneratedKeys()) {
+					if (generatedKeys.next()) {
+						int productId = generatedKeys.getInt(1);
+
+						// Insert category relationship
+						if (product.getCategoryId() > 0) {
+							String categoryQuery = "INSERT INTO product_category (product_id, category_id) VALUES (?, ?)";
+							try (PreparedStatement categoryStmt = dbConn.prepareStatement(categoryQuery)) {
+								categoryStmt.setInt(1, productId);
+								categoryStmt.setInt(2, product.getCategoryId());
+								if (categoryStmt.executeUpdate() == 0) {
+									dbConn.rollback();
+									return false;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Commit transaction
+			dbConn.commit();
+			return true;
 		} catch (SQLException e) {
+			try {
+				dbConn.rollback();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
 			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				dbConn.setAutoCommit(true);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		return false;
 	}
 	
 	public Boolean removeProduct(ProductModel product) {
 		if(isConnectionError) {
 			System.out.println("Connection Error");
+			return false;
 		}
-		String query = "DELETE FROM products where id = ?"; 
+		
 		try {
-			PreparedStatement insertStmt = dbConn.prepareStatement(query);
-			insertStmt.setInt(1,product.getId());
-		} catch(SQLException e) {
+			// Start transaction
+			dbConn.setAutoCommit(false);
+
+			// First remove the category relationship
+			String categoryQuery = "DELETE FROM product_category WHERE product_id = ?";
+			try (PreparedStatement categoryStmt = dbConn.prepareStatement(categoryQuery)) {
+				categoryStmt.setInt(1, product.getId());
+				categoryStmt.executeUpdate();
+			}
+
+			// Then remove the product
+			String productQuery = "DELETE FROM product WHERE id = ?";
+			try (PreparedStatement productStmt = dbConn.prepareStatement(productQuery)) {
+				productStmt.setInt(1, product.getId());
+				int affectedRows = productStmt.executeUpdate();
+				if (affectedRows == 0) {
+					dbConn.rollback();
+					return false;
+				}
+			}
+
+			// Commit transaction
+			dbConn.commit();
+			return true;
+		} catch (SQLException e) {
+			try {
+				dbConn.rollback();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
 			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				dbConn.setAutoCommit(true);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		return false;
 	}
 	
 	public Boolean updateProduct(ProductModel product) {
-		
 		if(isConnectionError) {
 			System.out.println("Connection Error");
+			return false;
 		}
 		
-		String searchQuery = "DELETE FROM products where id = ?"; 
-		String updateQuery = "UPDATE products"
-				+ "SET name = ?"
-				+ "SET description = ?"
-				+ "SET price = ?"
-				+ "SET imageUrl = ?";
-		
-		try(PreparedStatement searchStmt = dbConn.prepareStatement(searchQuery)){
-			
-			searchStmt.setInt(1, product.getId());
-			
-			PreparedStatement updateStmt = dbConn.prepareStatement(updateQuery);
-			updateStmt.setString(1,product.getName());
-			updateStmt.setString(2,product.getDescription());
-			updateStmt.setDouble(3, product.getPrice());
-			updateStmt.setString(4, product.getImageUrl());
-			
-			return updateStmt.executeUpdate() > 0;
-			
-		} catch(SQLException e) {
+		try {
+			// Start transaction
+			dbConn.setAutoCommit(false);
+
+			// Update product
+			String productQuery = "UPDATE product SET name = ?, description = ?, price = ?, quantity = ?, imageUrl = ? WHERE id = ?";
+			try (PreparedStatement productStmt = dbConn.prepareStatement(productQuery)) {
+				productStmt.setString(1, product.getName());
+				productStmt.setString(2, product.getDescription());
+				productStmt.setDouble(3, product.getPrice());
+				productStmt.setInt(4, product.getQuantity());
+				productStmt.setString(5, product.getImageUrl());
+				productStmt.setInt(6, product.getId());
+
+				int affectedRows = productStmt.executeUpdate();
+				if (affectedRows == 0) {
+					dbConn.rollback();
+					return false;
+				}
+			}
+
+			// Update category relationship
+			if (product.getCategoryId() > 0) {
+				// First check if the relationship exists
+				String checkQuery = "SELECT COUNT(*) FROM product_category WHERE product_id = ?";
+				boolean relationshipExists = false;
+				try (PreparedStatement checkStmt = dbConn.prepareStatement(checkQuery)) {
+					checkStmt.setInt(1, product.getId());
+					try (ResultSet rs = checkStmt.executeQuery()) {
+						if (rs.next()) {
+							relationshipExists = rs.getInt(1) > 0;
+						}
+					}
+				}
+
+				if (relationshipExists) {
+					// Update existing relationship
+					String updateCategoryQuery = "UPDATE product_category SET category_id = ? WHERE product_id = ?";
+					try (PreparedStatement categoryStmt = dbConn.prepareStatement(updateCategoryQuery)) {
+						categoryStmt.setInt(1, product.getCategoryId());
+						categoryStmt.setInt(2, product.getId());
+						categoryStmt.executeUpdate();
+					}
+				} else {
+					// Insert new relationship
+					String insertCategoryQuery = "INSERT INTO product_category (product_id, category_id) VALUES (?, ?)";
+					try (PreparedStatement categoryStmt = dbConn.prepareStatement(insertCategoryQuery)) {
+						categoryStmt.setInt(1, product.getId());
+						categoryStmt.setInt(2, product.getCategoryId());
+						categoryStmt.executeUpdate();
+					}
+				}
+			}
+
+			// Commit transaction
+			dbConn.commit();
+			return true;
+		} catch (SQLException e) {
+			try {
+				dbConn.rollback();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
 			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				dbConn.setAutoCommit(true);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		return false;
 	}
 	
 	public String findProductCategory(int productId) {
@@ -232,6 +361,49 @@ private boolean isConnectionError = false;
             }
             return null;
         } catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Get products by their IDs
+    public List<ProductModel> getProductsByIds(List<Integer> productIds) {
+        if (isConnectionError) {
+            System.out.println("Connection Error");
+            return null;
+        }
+
+        if (productIds == null || productIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Create a parameterized query with the correct number of placeholders
+        String placeholders = String.join(",", Collections.nCopies(productIds.size(), "?"));
+        String query = "SELECT * FROM product WHERE id IN (" + placeholders + ")";
+
+        List<ProductModel> products = new ArrayList<>();
+
+        try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+            // Set each product ID as a parameter
+            for (int i = 0; i < productIds.size(); i++) {
+                stmt.setInt(i + 1, productIds.get(i));
+            }
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                ProductModel product = new ProductModel(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    rs.getInt("price"),
+                    rs.getInt("quantity"),
+                    rs.getString("imageUrl")
+                );
+                products.add(product);
+            }
+            return products;
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }

@@ -40,24 +40,19 @@ public class EditProductController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("EditProductController: doGet called");
 		try {
 			String productIdStr = request.getParameter("productId");
-			System.out.println("EditProductController: productId from request = " + productIdStr);
 			
 			if (productIdStr == null || productIdStr.trim().isEmpty()) {
-				System.out.println("EditProductController: No productId provided, redirecting to product list");
 				response.sendRedirect(request.getContextPath() + "/admin/product");
 				return;
 			}
 
 			int productId = Integer.parseInt(productIdStr);
-			System.out.println("EditProductController: Fetching product with ID = " + productId);
 			
 			ProductModel product = productService.getProductById(productId);
 			
 			if (product == null) {
-				System.out.println("EditProductController: Product not found, redirecting to product list");
 				response.sendRedirect(request.getContextPath() + "/admin/product");
 				return;
 			}
@@ -69,7 +64,7 @@ public class EditProductController extends HttpServlet {
 			}
 
 			List<CategoriesModel> categories = categoriesService.getAllCategoryInfo();
-			System.out.println("EditProductController: Found " + categories.size() + " categories");
+			
 			
 			request.setAttribute("product", product);
 			request.setAttribute("categories", categories);
@@ -118,21 +113,25 @@ public class EditProductController extends HttpServlet {
 				imageUrl = imageUtil.getImageNameFromPart(imagePart);
 			}
 			
-			// Create product model with all fields
+			// Create product model with all fields including category ID
 			ProductModel product = new ProductModel(productId, productName, productDescription, price, quantity, imageUrl);
+			product.setCategoryId(categoryId);
 			
 			// Update product
 			if (productService.updateProduct(product)) {
-				// Update product category if needed
-				productService.updateProductCategory(productId, categoryId);
 				response.sendRedirect(request.getContextPath() + "/admin/product");
 			} else {
-				// Handle update failure
 				request.setAttribute("error", "Failed to update product");
 				doGet(request, response);
 			}
 			
+		} catch (NumberFormatException e) {
+			System.out.println("EditProductController: Invalid number format");
+			e.printStackTrace();
+			request.setAttribute("error", "Invalid number format in form data");
+			doGet(request, response);
 		} catch (Exception e) {
+			System.out.println("EditProductController: Error occurred");
 			e.printStackTrace();
 			request.setAttribute("error", "An error occurred while updating the product");
 			doGet(request, response);

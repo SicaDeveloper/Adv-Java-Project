@@ -42,17 +42,19 @@ public class UserService{
 
                    // Iterate through the ResultSet and create Category objects
                    while (rs.next()) {
-                	   String firstName = rs.getString("first_name");
-	       	            String lastName = rs.getString("last_name");
-	       	            String email = rs.getString("email");
-	       	            String phone = rs.getString("phone");
-	       	            String address = rs.getString("address");
-	       	            String password = rs.getString("password");
-	       	            String roleString = rs.getString("role");
-	       	            Roles role = null;
-	       	            role = Roles.valueOf(roleString.toLowerCase());
+                       int userId = rs.getInt("user_id");
+                       String firstName = rs.getString("first_name");
+                       String lastName = rs.getString("last_name");
+                       String email = rs.getString("email");
+                       String phone = rs.getString("phone");
+                       String address = rs.getString("address");
+                       String password = rs.getString("password");
+                       String roleString = rs.getString("role");
+                       Roles role = Roles.valueOf(roleString.toLowerCase());
                        
-                       userList.add(new UserModel(firstName, lastName, email, phone, address, password, role));
+                       UserModel user = new UserModel(firstName, lastName, email, phone, address, password, role);
+                       user.setUser_id(userId);
+                       userList.add(user);
                    }
                    return userList;
                } catch (SQLException e) { //Should be SQLException
@@ -129,6 +131,34 @@ public class UserService{
 	        }
 }
     
+	public UserModel getUserByEmail(String email) {
+		if (isConnectionError) {
+			System.out.println("Connection Error");
+			return null;
+		}
+
+		String query = "SELECT * FROM user WHERE email = ?";
+		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+			stmt.setString(1, email);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return new UserModel(
+					rs.getInt("id"),
+					rs.getString("first_name"),
+					rs.getString("last_name"),
+					rs.getString("email"),
+					rs.getString("password"),
+					rs.getString("phone"),
+					rs.getString("address"),
+					Roles.valueOf(rs.getString("role"))
+				);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
     
     

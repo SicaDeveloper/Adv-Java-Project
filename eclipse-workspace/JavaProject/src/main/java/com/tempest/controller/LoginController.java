@@ -51,20 +51,23 @@ public class LoginController extends HttpServlet {
 		UserModel user = new UserModel(email, password);
 		Boolean loginStatus = loginService.loginUser(user);
 		
-		
 		if (loginStatus != null && loginStatus) {
+			// Get the full user object from the database
+			UserModel fullUser = userService.getUserByEmail(email);
+			SessionUtil.CreateSession(request, "user", fullUser);
 			SessionUtil.CreateSession(request, "email", email);
+			
 			if (userService.getUserRole(email).equals(Roles.admin)) {
-				CookieUtil.addCookie(response, "role", "admin", 5 * 30 * 30);
-				response.sendRedirect(request.getContextPath() + "/admin/dashboard"); // Redirect to /home
+				CookieUtil.setCookie(response, "role", "admin", 5 * 30 * 30);
+				response.sendRedirect(request.getContextPath() + "/admin/dashboard");
 			} else {
-				CookieUtil.addCookie(response, "role", "customer", 5 * 30 * 30);
-				response.sendRedirect(request.getContextPath() + "/home"); // Redirect to /home
+				CookieUtil.setCookie(response, "role", "customer", 5 * 30 * 30);
+				response.sendRedirect(request.getContextPath() + "/home");
 			}
 		} else {
 			handleLoginFailure(request, response, loginStatus);
 		}
-		}
+	}
 	
 	
 	private void handleLoginFailure(HttpServletRequest req, HttpServletResponse resp, Boolean loginStatus)

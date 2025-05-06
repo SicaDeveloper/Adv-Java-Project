@@ -14,7 +14,10 @@
 			<div class="product-price">$${param.price}</div>
 			<div class="product-actions">
 				<button onclick="" class="action-button">Buy-now</button>
-				<button onclick="" class="action-button">Add to Cart</button>
+				<form action="${pageContext.request.contextPath}/cart/add" method="post" style="display: inline;">
+					<input type="hidden" name="productId" value="${param.id}">
+					<button type="submit" class="action-button">Add to Cart</button>
+				</form>
 			</div>
 		</div>
 </div>

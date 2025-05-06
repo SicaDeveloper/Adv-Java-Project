@@ -1,23 +1,30 @@
 package com.tempest.model;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 public class OrderModel {
     private int id;
     private int userId;
-    private double totalAmount;
     private String status;
-    private Timestamp orderDate;
+    private Date date;
+    private double amount;
 
     public OrderModel() {
     }
 
-    public OrderModel(int id, int userId, double totalAmount, String status, Timestamp orderDate) {
+    public OrderModel(int id, String status, Date date, double amount) {
+        this.id = id;
+        this.status = status;
+        this.date = date;
+        this.amount = amount;
+    }
+
+    public OrderModel(int id, int userId, String status, Date date, double amount) {
         this.id = id;
         this.userId = userId;
-        this.totalAmount = totalAmount;
         this.status = status;
-        this.orderDate = orderDate;
+        this.date = date;
+        this.amount = amount;
     }
 
     public int getId() {
@@ -36,14 +43,6 @@ public class OrderModel {
         this.userId = userId;
     }
 
-    public double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -52,11 +51,36 @@ public class OrderModel {
         this.status = status;
     }
 
-    public Timestamp getOrderDate() {
-        return orderDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setOrderDate(Timestamp orderDate) {
-        this.orderDate = orderDate;
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    // Alias methods for compatibility
+    public Date getOrderDate() {
+        return getDate();
+    }
+
+    public void setOrderDate(Date date) {
+        setDate(date);
+    }
+
+    public double getTotalAmount() {
+        return getAmount();
+    }
+
+    public void setTotalAmount(double amount) {
+        setAmount(amount);
     }
 }
