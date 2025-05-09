@@ -35,7 +35,7 @@
                             <tr>
                                 <td>
                                     <div class="product-info">
-                                        <img src="${pageContext.request.contextPath}${item.imageUrl}" alt="${item.name}" class="product-thumbnail">
+                                        <img src="${pageContext.request.contextPath}/resource/images/products/${item.imageUrl}" alt="${item.name}" class="product-thumbnail">
                                         <span>${item.name}</span>
                                     </div>
                                 </td>

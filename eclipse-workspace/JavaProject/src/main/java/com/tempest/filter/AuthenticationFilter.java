@@ -19,8 +19,10 @@ import com.tempest.util.SessionUtil;
 public class AuthenticationFilter implements Filter {
 
 	private static final String LOGIN = "/login";
+	private static final String LOGOUT = "/logout";
 	private static final String REGISTER = "/register";
 	private static final String HOME = "/home";
+	private static final String PRODUCT = "/products";
 	private static final String ROOT = "/";
 	private static final String DASHBOARD = "/admin/dashboard";
 	private static final String PRODUCT_DASHBOARD = "/admin/product";
@@ -37,6 +39,7 @@ public class AuthenticationFilter implements Filter {
 	private static final String CONTACT = "/contact";
 	private static final String ORDER_LIST = "/orderlist";
 	private static final String CART = "/cart";
+	private static final String CART_ADD = "/cart/add";
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -80,7 +83,7 @@ public class AuthenticationFilter implements Filter {
 	}
 
 	private boolean isResource(String path) {
-		return path.endsWith(".png") || path.endsWith(".jpg") || 
+		return path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".avif") ||
 			   path.endsWith(".css") || path.endsWith(".js") ||
 			   path.endsWith(".ico") || path.endsWith(".gif");
 	}
@@ -123,17 +126,18 @@ public class AuthenticationFilter implements Filter {
 	}
 
 	private boolean isAdminPath(String path) {
-		return path.equals(DASHBOARD) || path.equals(PRODUCT_DASHBOARD) || 
+		return path.equals(DASHBOARD) || path.equals(PRODUCT_DASHBOARD) || path.equals(LOGOUT) ||
 			   path.startsWith(PRODUCT_EDIT) || path.equals(PRODUCT_ADD) || 
-			   path.equals(PRODUCT_DELETE) || path.equals(ADMIN_ORDER) || 
+			   path.equals(PRODUCT_DELETE) || path.equals(ADMIN_ORDER) || path.equals(PRODUCT) || path.equals(PROFILE_UPDATE) ||									
 			   path.startsWith(ORDER_EDIT) || path.startsWith(ORDER_ADD) || 
 			   path.equals(ORDER_DELETE) || path.equals(ORDER) || 
-			   path.equals(HOME) || path.equals(ROOT);
+			   path.equals(HOME) || path.equals(ROOT) ;
 	}
 
 	private boolean isUserPath(String path) {
-		return path.equals(HOME) || path.equals(ROOT) || path.equals(ABOUT) ||
-			   path.equals(CONTACT) || path.equals(ORDER_LIST) || path.equals(CART);
+		return path.equals(HOME) || path.equals(ROOT) || path.equals(ABOUT) || 
+			   path.equals(CONTACT) || path.equals(ORDER_LIST) || path.equals(CART) || 
+			   path.equals(CART_ADD) || path.equals(LOGOUT);
 	}
 
 	private boolean isPublicPath(String path) {

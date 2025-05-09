@@ -32,27 +32,14 @@ public class CartController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String pathInfo = request.getPathInfo();
-		System.out.println("CartController: Processing request for path: " + pathInfo);
 		
-		// Handle both /cart and /cart/ paths
-		if (pathInfo == null || pathInfo.equals("/")) {
-			// Check role from cookie
-			String role = CookieUtil.getCookieValue(request, "role");
-			System.out.println("CartController: User role from cookie: " + role);
-			
-			if (role == null || !role.equals("customer")) {
-				System.out.println("CartController: No valid role found in cookie, redirecting to login");
-				response.sendRedirect(request.getContextPath() + "/login");
-				return;
-			}
-
 			try {
 				HttpSession session = request.getSession();
-				Integer userId = (Integer) session.getAttribute("userId");
+			
+				int userId = Integer.parseInt(CookieUtil.getCookieValue(request, "userId"));
 				
 				// Get user's cart
-				CartModel cart = cartService.getUserCart();
+				CartModel cart = cartService.getUserCart(userId);
 				System.out.println("CartController: Retrieved cart: " + (cart != null ? cart.getId() : "null"));
 				
 				if (cart == null) {
@@ -66,7 +53,6 @@ public class CartController extends HttpServlet {
 				// Get cart items with product details
 				List<ProductModel> cartItems = cartService.getCartItems(cart.getId());
 				System.out.println("CartController: Retrieved " + (cartItems != null ? cartItems.size() : 0) + " cart items");
-				
 				double subtotal = calculateSubtotal(cartItems);
 				double tax = subtotal * 0.13; // 13% tax
 				double total = subtotal + tax;
@@ -85,7 +71,6 @@ public class CartController extends HttpServlet {
 				response.sendRedirect(request.getContextPath() + "/home");
 			}
 		}
-	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -96,73 +81,116 @@ public class CartController extends HttpServlet {
 		
 		// Check role from cookie
 		String role = CookieUtil.getCookieValue(request, ROLE_COOKIE_NAME);
+		System.out.println("CartController: User role from cookie: " + role);
 		
-		if (role == null || !role.equals("customer")) {
+		// Check session for user ID
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			System.out.println("CartController: No session found");
 			response.sendRedirect(request.getContextPath() + "/login");
 			return;
 		}
 
-		HttpSession session = request.getSession();
 		Integer userId = (Integer) session.getAttribute("userId");
-		CartModel cart = cartService.getUserCart(userId);
+		System.out.println("CartController: User ID from session: " + userId);
 		
-		if (cart == null) {
-			int cartId = cartService.createCart(userId);
-			cart = new CartModel();
-			cart.setId(cartId);
+		if (userId == null) {
+			System.out.println("CartController: No user ID in session");
+			response.sendRedirect(request.getContextPath() + "/login");
+			return;
 		}
-		
-		if (pathInfo != null && pathInfo.equals("/add")) {
-			try {
-				int productId = Integer.parseInt(request.getParameter("productId"));
-				int quantity = 1; // Default quantity
 
-				// Add product to cart
-				if (cartService.addToCart(cart.getId(), productId, quantity)) {
-					response.sendRedirect(request.getContextPath() + "/cart");
-				} else {
-					request.setAttribute("error", "Failed to add item to cart");
+		if (role == null || !role.equals("customer")) {
+			System.out.println("CartController: User not authorized - Role: " + role);
+			response.sendRedirect(request.getContextPath() + "/login");
+			return;
+		}
+
+		try {
+			CartModel cart = cartService.getUserCart(userId);
+			System.out.println("CartController: Retrieved cart: " + (cart != null ? cart.getId() : "null"));
+			
+			if (cart == null) {
+				int cartId = cartService.createCart(userId);
+				System.out.println("CartController: Created new cart with ID: " + cartId);
+				cart = new CartModel();
+				cart.setId(cartId);
+			}
+			
+			if (pathInfo != null && pathInfo.equals("/add")) {
+				try {
+					String productIdStr = request.getParameter("productId");
+					System.out.println("CartController: Received productId parameter: " + productIdStr);
+					
+					if (productIdStr == null || productIdStr.trim().isEmpty()) {
+						System.out.println("CartController: Product ID is null or empty");
+						request.setAttribute("error", "Invalid product ID");
+						response.sendRedirect(request.getContextPath() + "/products");
+						return;
+					}
+
+					int productId = Integer.parseInt(productIdStr);
+					int quantity = 1; // Default quantity
+					System.out.println("CartController: Adding product ID: " + productId + " with quantity: " + quantity);
+
+					// Add product to cart
+					if (cartService.addToCart(cart.getId(), productId, quantity)) {
+						System.out.println("CartController: Successfully added product to cart");
+						response.sendRedirect(request.getContextPath() + "/cart");
+					} else {
+						System.out.println("CartController: Failed to add product to cart");
+						request.setAttribute("error", "Failed to add item to cart");
+						response.sendRedirect(request.getContextPath() + "/products");
+					}
+				} catch (NumberFormatException e) {
+					System.out.println("CartController: Invalid product ID format: " + e.getMessage());
+					request.setAttribute("error", "Invalid product ID format");
+					response.sendRedirect(request.getContextPath() + "/products");
+				} catch (Exception e) {
+					System.out.println("CartController: Error adding to cart: " + e.getMessage());
+					e.printStackTrace();
+					request.setAttribute("error", "An error occurred while adding item to cart");
 					response.sendRedirect(request.getContextPath() + "/products");
 				}
-			} catch (Exception e) {
-				System.out.println("CartController: Error adding to cart: " + e.getMessage());
-				e.printStackTrace();
-				request.setAttribute("error", "An error occurred while adding item to cart");
-				response.sendRedirect(request.getContextPath() + "/products");
-			}
-		} else if (pathInfo != null && pathInfo.equals("/remove")) {
-			try {
-				int productId = Integer.parseInt(request.getParameter("productId"));
-				
-				if (cartService.removeFromCart(cart.getId(), productId)) {
-					response.sendRedirect(request.getContextPath() + "/cart");
-				} else {
-					request.setAttribute("error", "Failed to remove item from cart");
-					response.sendRedirect(request.getContextPath() + "/cart");
-				}
-			} catch (Exception e) {
-				System.out.println("CartController: Error removing from cart: " + e.getMessage());
-				e.printStackTrace();
-				request.setAttribute("error", "An error occurred while removing item from cart");
-				response.sendRedirect(request.getContextPath() + "/cart");
-			}
-		} else if (pathInfo != null && pathInfo.equals("/update")) {
-			try {
-				int productId = Integer.parseInt(request.getParameter("productId"));
-				int quantity = Integer.parseInt(request.getParameter("quantity"));
-				
-				if (cartService.updateCartItemQuantity(cart.getId(), productId, quantity)) {
-					response.sendRedirect(request.getContextPath() + "/cart");
-				} else {
-					request.setAttribute("error", "Failed to update item quantity");
+			} else if (pathInfo != null && pathInfo.equals("/remove")) {
+				try {
+					int productId = Integer.parseInt(request.getParameter("productId"));
+					
+					if (cartService.removeFromCart(cart.getId(), productId)) {
+						response.sendRedirect(request.getContextPath() + "/cart");
+					} else {
+						request.setAttribute("error", "Failed to remove item from cart");
+						response.sendRedirect(request.getContextPath() + "/cart");
+					}
+				} catch (Exception e) {
+					System.out.println("CartController: Error removing from cart: " + e.getMessage());
+					e.printStackTrace();
+					request.setAttribute("error", "An error occurred while removing item from cart");
 					response.sendRedirect(request.getContextPath() + "/cart");
 				}
-			} catch (Exception e) {
-				System.out.println("CartController: Error updating cart: " + e.getMessage());
-				e.printStackTrace();
-				request.setAttribute("error", "An error occurred while updating cart");
-				response.sendRedirect(request.getContextPath() + "/cart");
+			} else if (pathInfo != null && pathInfo.equals("/update")) {
+				try {
+					int productId = Integer.parseInt(request.getParameter("productId"));
+					int quantity = Integer.parseInt(request.getParameter("quantity"));
+					
+					if (cartService.updateCartItemQuantity(cart.getId(), productId, quantity)) {
+						response.sendRedirect(request.getContextPath() + "/cart");
+					} else {
+						request.setAttribute("error", "Failed to update item quantity");
+						response.sendRedirect(request.getContextPath() + "/cart");
+					}
+				} catch (Exception e) {
+					System.out.println("CartController: Error updating cart: " + e.getMessage());
+					e.printStackTrace();
+					request.setAttribute("error", "An error occurred while updating cart");
+					response.sendRedirect(request.getContextPath() + "/cart");
+				}
 			}
+		} catch (Exception e) {
+			System.out.println("CartController: Unexpected error: " + e.getMessage());
+			e.printStackTrace();
+			request.setAttribute("error", "An unexpected error occurred");
+			response.sendRedirect(request.getContextPath() + "/products");
 		}
 	}
 

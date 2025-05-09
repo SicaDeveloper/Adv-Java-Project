@@ -8,18 +8,19 @@
 </head>
 <body>
 <div class="product-card">
-	<img class="product-image" src="${pageContext.request.contextPath}${param.imageUrl}" alt="" />
+	<img class="product-image" src="${pageContext.request.contextPath}/resource/images/products/${param.imageUrl}" alt="" />
 		<div class="product-details">
 			<div class="product-name"><a href="${pageContext.request.contextPath}/product-detail/${param.id}">${param.name}</a></div>
 			<div class="product-price">$${param.price}</div>
 			<div class="product-actions">
-				<button onclick="" class="action-button">Buy-now</button>
+				<button onclick="window.location.href='${pageContext.request.contextPath}/checkout'" class="action-button">Buy-now</button>
 				<form action="${pageContext.request.contextPath}/cart/add" method="post" style="display: inline;">
 					<input type="hidden" name="productId" value="${param.id}">
-					<button type="submit" class="action-button">Add to Cart</button>
+					<input type="hidden" name="productName" value="${param.name}">
+					<button type="submit" class="action-button" onclick="">Add to Cart</button>
 				</form>
 			</div>
 		</div>
 </div>
 </body>
-</html>
+</html>	

@@ -54,8 +54,10 @@ public class LoginController extends HttpServlet {
 		if (loginStatus != null && loginStatus) {
 			// Get the full user object from the database
 			UserModel fullUser = userService.getUserByEmail(email);
+			CookieUtil.setCookie(response,"userId",Integer.toString(fullUser.getUser_id()));
 			SessionUtil.CreateSession(request, "user", fullUser);
 			SessionUtil.CreateSession(request, "email", email);
+			SessionUtil.CreateSession(request, "userId", fullUser.getUser_id());
 			
 			if (userService.getUserRole(email).equals(Roles.admin)) {
 				CookieUtil.setCookie(response, "role", "admin", 5 * 30 * 30);

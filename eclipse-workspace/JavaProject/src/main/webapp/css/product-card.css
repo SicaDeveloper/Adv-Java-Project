@@ -30,7 +30,7 @@
 .product-name{
     font-weight: 500;
     font-size: 18px;
-    padding-bottom:5px;
+    padding-bottom:8px;
 }
 
 .product-name a{
@@ -41,7 +41,7 @@
 .product-price{
     font-weight: 550;
     font-size: 20px;
-    padding-bottom:5px;
+    padding-bottom:8px;
 }
 .see-more{
 	padding-bottom:5px;

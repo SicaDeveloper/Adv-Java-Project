@@ -15,7 +15,7 @@
 
     <main>
         <!-- Include Create Order Section -->
-        <jsp:include page="create-order.jsp" />
+        <jsp:include page="add-order.jsp" />
 
         <!-- Include Order History Section -->
         <jsp:include page="order-history.jsp" />

@@ -61,7 +61,7 @@ public class UserModel {
 
     // Getter for user_id
     public int getUser_id() {
-        return user_id;
+        return id;
     }
 
     // Getter for first_name
@@ -99,8 +99,8 @@ public class UserModel {
     }
     
     // Setter for user_id
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUser_id(int id) {
+        this.id = id;
     }
 
     // Setter for first_name

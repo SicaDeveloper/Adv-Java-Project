@@ -35,26 +35,39 @@ public class CartService {
             return -1;
         }
 
-        String createCartSQL = "INSERT INTO cart (created_date) VALUES (CURRENT_TIMESTAMP)";
+        // First get the most recent cart ID
+        String getLastCartIdSQL = "SELECT MAX(cart_id) as last_cart_id FROM cart";
+        String createCartSQL = "INSERT INTO cart (cart_id, created_date) VALUES (?, CURRENT_TIMESTAMP)";
         String linkUserCartSQL = "INSERT INTO user_cart (user_id, cart_id) VALUES (?, ?)";
 
         try {
             dbConn.setAutoCommit(false);
-            PreparedStatement createStmt = dbConn.prepareStatement(createCartSQL, PreparedStatement.RETURN_GENERATED_KEYS);
-            createStmt.executeUpdate();
-            ResultSet rs = createStmt.getGeneratedKeys();
-
-            if (rs.next()) {
-                int cartId = rs.getInt(1);
-                PreparedStatement linkStmt = dbConn.prepareStatement(linkUserCartSQL);
-                linkStmt.setInt(1, userId);
-                linkStmt.setInt(2, cartId);
-                linkStmt.executeUpdate();
-                dbConn.commit();
-                return cartId;
+            
+            // Get the last cart ID
+            int newCartId = 1; // Default to 1 if no carts exist
+            try (PreparedStatement getLastIdStmt = dbConn.prepareStatement(getLastCartIdSQL)) {
+                ResultSet rs = getLastIdStmt.executeQuery();
+                if (rs.next()) {
+                    int lastCartId = rs.getInt("last_cart_id");
+                    if (lastCartId > 0) {
+                        newCartId = lastCartId + 1;
+                    }
+                }
             }
-            dbConn.rollback();
-            return -1;
+
+            // Create new cart with the incremented ID
+            PreparedStatement createStmt = dbConn.prepareStatement(createCartSQL);
+            createStmt.setInt(1, newCartId);
+            createStmt.executeUpdate();
+
+            // Link the cart to the user
+            PreparedStatement linkStmt = dbConn.prepareStatement(linkUserCartSQL);
+            linkStmt.setInt(1, userId);
+            linkStmt.setInt(2, newCartId);
+            linkStmt.executeUpdate();
+
+            dbConn.commit();
+            return newCartId;
         } catch (SQLException e) {
             try {
                 dbConn.rollback();
@@ -107,9 +120,11 @@ public class CartService {
      */
     public CartModel getUserCart(int userId) {
         if (isConnectionError) {
-            System.out.println("Connection Error");
+            System.out.println("CartService: Connection Error");
             return null;
         }
+
+        System.out.println("CartService: Getting cart for user: " + userId);
 
         String query = "SELECT c.* FROM cart c " +
                       "JOIN user_cart uc ON c.cart_id = uc.cart_id " +
@@ -124,10 +139,13 @@ public class CartService {
                 CartModel cart = new CartModel();
                 cart.setId(rs.getInt("cart_id"));
                 cart.setDate(rs.getDate("created_date"));
+                System.out.println("CartService: Found cart with ID: " + cart.getId());
                 return cart;
             }
+            System.out.println("CartService: No cart found for user");
             return null;
         } catch (SQLException e) {
+            System.out.println("CartService: SQL Error in getUserCart: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -223,9 +241,11 @@ public class CartService {
      */
     public boolean addToCart(int cartId, int productId, int quantity) {
         if (isConnectionError) {
-            System.out.println("Connection Error");
+            System.out.println("CartService: Connection Error");
             return false;
         }
+
+        System.out.println("CartService: Adding to cart - CartID: " + cartId + ", ProductID: " + productId + ", Quantity: " + quantity);
 
         // First check if item already exists in cart
         String checkQuery = "SELECT quantity FROM cart_item WHERE cart_id = ? AND product_id = ?";
@@ -237,18 +257,23 @@ public class CartService {
             if (rs.next()) {
                 // Item exists, update quantity
                 int currentQuantity = rs.getInt("quantity");
+                System.out.println("CartService: Item exists in cart with quantity: " + currentQuantity);
                 return updateCartItemQuantity(cartId, productId, currentQuantity + quantity);
             } else {
                 // Item doesn't exist, insert new
+                System.out.println("CartService: Item doesn't exist in cart, inserting new");
                 String insertQuery = "INSERT INTO cart_item (cart_id, product_id, quantity) VALUES (?, ?, ?)";
                 try (PreparedStatement insertStmt = dbConn.prepareStatement(insertQuery)) {
                     insertStmt.setInt(1, cartId);
                     insertStmt.setInt(2, productId);
                     insertStmt.setInt(3, quantity);
-                    return insertStmt.executeUpdate() > 0;
+                    int result = insertStmt.executeUpdate();
+                    System.out.println("CartService: Insert result: " + (result > 0 ? "success" : "failed"));
+                    return result > 0;
                 }
             }
         } catch (SQLException e) {
+            System.out.println("CartService: SQL Error in addToCart: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
