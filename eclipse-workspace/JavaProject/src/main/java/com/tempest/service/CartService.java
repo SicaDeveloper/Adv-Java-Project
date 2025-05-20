@@ -342,7 +342,7 @@ public class CartService {
             return null;
         }
 
-        String query = "SELECT p.*, ci.quantity FROM product p " +
+        String query = "SELECT p.*, ci.quantity as cart_quantity FROM product p " +
                       "JOIN cart_item ci ON p.id = ci.product_id " +
                       "WHERE ci.cart_id = ?";
         List<ProductModel> cartItems = new ArrayList<>();
@@ -357,9 +357,11 @@ public class CartService {
                     rs.getString("name"),
                     rs.getString("description"),
                     rs.getDouble("price"),
-                    rs.getInt("quantity"), // This is the cart item quantity
+                    rs.getInt("quantity"), // This is the product's stock quantity
                     rs.getString("imageUrl")
                 );
+                // Set the cart quantity separately
+                product.setCartQuantity(rs.getInt("cart_quantity"));
                 cartItems.add(product);
             }
             return cartItems;

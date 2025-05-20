@@ -15,26 +15,13 @@
 			<div class="product-categories">
 				<div class="product-category-header">Shop by categories</div>
 				<div class="product-category-container">
-					<div class="product-category">
-						<input class="checkbox" type="checkbox" name="" id="" />
-						<label for="">Category 1</label>
-					</div>
-					<div class="product-category">
-						<input class="checkbox" type="checkbox" name="" id="" />
-						<label for="">Category 2</label>
-					</div>
-					<div class="product-category">
-						<input class="checkbox" type="checkbox" name="" id="" />
-						<label for="">Category 3</label>
-					</div>
-					<div class="product-category">
-						<input class="checkbox" type="checkbox" name="" id="" />
-						<label for="">Category 4</label>
-					</div>
-					<div class="product-category">
-						<input class="checkbox" type="checkbox" name="" id="" />
-						<label for="">Category 5</label>
-					</div>
+				<div class="category-list">
+					<c:forEach var="category" items="${categories}">
+					 	<input value="${category.id}" type="checkbox" />
+					 	<label>${category.name}</label>
+	                </c:forEach>
+	               </div>
+	                <button class="product-filter">Filter</button>
 				</div>
 			</div>
 			<div>
@@ -50,10 +37,11 @@
 				<div class="product-list">
 					<c:forEach var="product" items="${product}">
 						<jsp:include page="product-card.jsp">
+							<jsp:param name="id" value="${product.id}"/>
 							<jsp:param name="name" value="${product.name}"/>
 							<jsp:param name="price" value="${product.price}"/>
 							<jsp:param name="imageUrl" value="${product.imageUrl}"/>
-							<jsp:param name="linkUrl" value="productDetails.jsp?id=${product.productId}"/>
+							<jsp:param name="linkUrl" value="productDetails.jsp?id=${product.id}"/>
         				</jsp:include>
 					</c:forEach>
 				</div>

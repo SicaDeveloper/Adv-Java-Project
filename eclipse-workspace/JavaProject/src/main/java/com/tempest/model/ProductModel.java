@@ -9,8 +9,16 @@ public class ProductModel{
 	private String imageUrl;
 	private int quantity;
 	private int categoryId;
+	private int cartQuantity; // Quantity in cart
 	
 	public ProductModel(String name, int quantity, double price, String imageUrl){
+		this.name = name;
+		this.price = price;
+		this.quantity = quantity;
+	}
+	
+	public ProductModel(int id, String name, int quantity, double price, String imageUrl){
+		this.id= id;
 		this.name = name;
 		this.price = price;
 		this.quantity = quantity;
@@ -61,6 +69,10 @@ public class ProductModel{
         return categoryId;
     }
 
+    public int getCartQuantity() {
+        return cartQuantity;
+    }
+
     // Setter methods
 
     public void setId(int id) {
@@ -89,5 +101,9 @@ public class ProductModel{
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+    }
+    
+    public void setCartQuantity(int cartQuantity) {
+        this.cartQuantity = cartQuantity;
     }
 }

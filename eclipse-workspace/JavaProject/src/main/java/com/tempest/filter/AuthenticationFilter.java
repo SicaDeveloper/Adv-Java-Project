@@ -40,6 +40,8 @@ public class AuthenticationFilter implements Filter {
 	private static final String ORDER_LIST = "/orderlist";
 	private static final String CART = "/cart";
 	private static final String CART_ADD = "/cart/add";
+	private static final String CART_UPDATE = "/cart/update";
+	private static final String CART_DELETE = "/cart/delete";
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -126,7 +128,7 @@ public class AuthenticationFilter implements Filter {
 	}
 
 	private boolean isAdminPath(String path) {
-		return path.equals(DASHBOARD) || path.equals(PRODUCT_DASHBOARD) || path.equals(LOGOUT) ||
+		return path.equals(DASHBOARD) || path.equals(PRODUCT_DASHBOARD) || path.equals(LOGOUT) || path.startsWith(PRODUCT) ||
 			   path.startsWith(PRODUCT_EDIT) || path.equals(PRODUCT_ADD) || 
 			   path.equals(PRODUCT_DELETE) || path.equals(ADMIN_ORDER) || path.equals(PRODUCT) || path.equals(PROFILE_UPDATE) ||									
 			   path.startsWith(ORDER_EDIT) || path.startsWith(ORDER_ADD) || 
@@ -135,9 +137,10 @@ public class AuthenticationFilter implements Filter {
 	}
 
 	private boolean isUserPath(String path) {
-		return path.equals(HOME) || path.equals(ROOT) || path.equals(ABOUT) || 
+		return path.equals(HOME) || path.equals(ROOT) || path.equals(ABOUT) ||  path.startsWith(PRODUCT) ||
 			   path.equals(CONTACT) || path.equals(ORDER_LIST) || path.equals(CART) || 
-			   path.equals(CART_ADD) || path.equals(LOGOUT);
+			   path.equals(CART_ADD) || path.equals(CART_UPDATE) || path.equals(CART_DELETE) || 
+			   path.equals(LOGOUT);
 	}
 
 	private boolean isPublicPath(String path) {

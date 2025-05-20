@@ -42,12 +42,12 @@
                                 <td>
                                     <form action="${pageContext.request.contextPath}/cart/update" method="post" class="quantity-form">
                                         <input type="hidden" name="productId" value="${item.id}">
-                                        <input type="number" name="quantity" value="${item.quantity}" min="1" 
+                                        <input type="number" name="quantity" value="${item.cartQuantity}" min="1" 
                                                onchange="this.form.submit()" class="quantity-input">
                                     </form>
                                 </td>
                                 <td>$${item.price}</td>
-                                <td>$${item.price * item.quantity}</td>
+                                <td>$${item.price * item.cartQuantity}</td>
                                 <td>
                                     <form action="${pageContext.request.contextPath}/cart/remove" method="post" class="remove-form">
                                         <input type="hidden" name="productId" value="${item.id}">
@@ -64,9 +64,15 @@
         <section id="cart-summary">
             <h2>Summary</h2>
             <c:if test="${not empty cartItems}">
+                <c:set var="subtotal" value="0" />
+                <c:forEach var="item" items="${cartItems}">
+                    <c:set var="subtotal" value="${subtotal + (item.price * item.cartQuantity)}" />
+                </c:forEach>
                 <p>Subtotal: <span id="subtotal">$${subtotal}</span></p>
+                <c:set var="tax" value="${subtotal * 0.13}" />
                 <p>Tax (13%): <span id="tax">$${tax}</span></p>
                 <br>
+                <c:set var="total" value="${subtotal + tax}" />
                 <p>Total: <span id="total">$${total}</span></p>
                 <a href="${pageContext.request.contextPath}/checkout">
                     <button id="checkout-button">Proceed to Checkout</button>
