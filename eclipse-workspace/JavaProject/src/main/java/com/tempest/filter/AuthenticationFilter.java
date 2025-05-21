@@ -36,6 +36,8 @@ public class AuthenticationFilter implements Filter {
 	private static final String CUSTOMER_DASHBOARD = "/admin/customer";
 	private static final String CUSTOMER_EDIT = "/admin/customer/edit";
 	private static final String CUSTOMER_DELETE = "/admin/customer/delete";
+	private static final String PROFILE = "/profile";
+	private static final String PROFILE_EDIT = "/profile/edit";
 	private static final String PROFILE_UPDATE = "/profile/update";
 	private static final String ABOUT = "/aboutus";
 	private static final String ORDER = "/orders";
@@ -45,6 +47,7 @@ public class AuthenticationFilter implements Filter {
 	private static final String CART_ADD = "/cart/add";
 	private static final String CART_UPDATE = "/cart/update";
 	private static final String CART_DELETE = "/cart/delete";
+	private static final String PRODUCT_DETAIL = "/product/detail";
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -131,25 +134,28 @@ public class AuthenticationFilter implements Filter {
 	}
 
 	private boolean isAdminPath(String path) {
-		return path.equals(DASHBOARD) || path.equals(PRODUCT_DASHBOARD) || path.equals(LOGOUT) || path.startsWith(PRODUCT) ||
-			   path.startsWith(PRODUCT_EDIT) || path.equals(PRODUCT_ADD) || 
-			   path.equals(PRODUCT_DELETE) || path.equals(ADMIN_ORDER) || path.equals(PRODUCT) || path.equals(PROFILE_UPDATE) ||									
-			   path.startsWith(ORDER_EDIT) || path.startsWith(ORDER_ADD) || 
-			   path.equals(ORDER_DELETE) || path.equals(ORDER) || 
-			   path.equals(CUSTOMER_DASHBOARD) || path.startsWith(CUSTOMER_EDIT) ||
-			   path.equals(CUSTOMER_DELETE) || path.equals(HOME) || path.equals(ROOT);
+		return path.equals(DASHBOARD) || path.equals(PRODUCT_DASHBOARD) || path.equals(LOGOUT) || 
+			   path.startsWith(PRODUCT) || path.startsWith(PRODUCT_EDIT) || path.equals(PRODUCT_ADD) || 
+			   path.equals(PRODUCT_DELETE) || path.equals(ADMIN_ORDER) || path.equals(PRODUCT) || 
+			   path.equals(PROFILE) || path.equals(PROFILE_EDIT) || path.equals(PROFILE_UPDATE) ||
+			   path.startsWith(ORDER_EDIT) || path.startsWith(ORDER_ADD) || path.equals(ORDER_DELETE) || 
+			   path.equals(ORDER) || path.equals(CUSTOMER_DASHBOARD) || path.startsWith(CUSTOMER_EDIT) ||
+			   path.equals(CUSTOMER_DELETE) || path.equals(HOME) || path.equals(ROOT) ||
+			   path.startsWith(PRODUCT_DETAIL);
 	}
 
 	private boolean isUserPath(String path) {
-		return path.equals(HOME) || path.equals(ROOT) || path.equals(ABOUT) ||  path.startsWith(PRODUCT) ||
+		return path.equals(HOME) || path.equals(ROOT) || path.equals(ABOUT) || path.startsWith(PRODUCT) ||
 			   path.equals(CONTACT) || path.equals(ORDER_LIST) || path.equals(CART) || 
 			   path.equals(CART_ADD) || path.equals(CART_UPDATE) || path.equals(CART_DELETE) || 
-			   path.equals(LOGOUT);
+			   path.equals(LOGOUT) || path.equals(PROFILE) || path.equals(PROFILE_EDIT) || 
+			   path.equals(PROFILE_UPDATE) || path.startsWith(PRODUCT_DETAIL);
 	}
 
 	private boolean isPublicPath(String path) {
 		return path.equals(LOGIN) || path.equals(REGISTER) || 
-			   path.equals(HOME) || path.equals(ROOT);
+			   path.equals(HOME) || path.equals(ROOT) || path.equals(ABOUT) ||
+			   path.equals(CONTACT) || path.startsWith(PRODUCT) || path.startsWith(PRODUCT_DETAIL);
 	}
 
 	@Override

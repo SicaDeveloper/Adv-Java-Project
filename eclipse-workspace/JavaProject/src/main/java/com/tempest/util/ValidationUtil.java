@@ -66,4 +66,28 @@ public class ValidationUtil {
         LocalDate today = LocalDate.now();
         return Period.between(dob, today).getYears() >= 16;
     }
+
+    public static boolean isValidProductId(String productId) {
+        if (isNullOrEmpty(productId)) {
+            return false;
+        }
+        try {
+            int id = Integer.parseInt(productId);
+            return id > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidQuantity(String quantity) {
+        if (isNullOrEmpty(quantity)) {
+            return false;
+        }
+        try {
+            int qty = Integer.parseInt(quantity);
+            return qty > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }

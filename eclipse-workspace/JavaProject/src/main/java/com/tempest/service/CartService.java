@@ -31,11 +31,9 @@ public class CartService {
      */
     public int createCart(int userId) {
         if (isConnectionError) {
-            System.out.println("Connection Error");
             return -1;
         }
 
-        // First get the most recent cart ID
         String getLastCartIdSQL = "SELECT MAX(cart_id) as last_cart_id FROM cart";
         String createCartSQL = "INSERT INTO cart (cart_id, created_date) VALUES (?, CURRENT_TIMESTAMP)";
         String linkUserCartSQL = "INSERT INTO user_cart (user_id, cart_id) VALUES (?, ?)";
@@ -43,8 +41,7 @@ public class CartService {
         try {
             dbConn.setAutoCommit(false);
             
-            // Get the last cart ID
-            int newCartId = 1; // Default to 1 if no carts exist
+            int newCartId = 1;
             try (PreparedStatement getLastIdStmt = dbConn.prepareStatement(getLastCartIdSQL)) {
                 ResultSet rs = getLastIdStmt.executeQuery();
                 if (rs.next()) {
@@ -55,12 +52,10 @@ public class CartService {
                 }
             }
 
-            // Create new cart with the incremented ID
             PreparedStatement createStmt = dbConn.prepareStatement(createCartSQL);
             createStmt.setInt(1, newCartId);
             createStmt.executeUpdate();
 
-            // Link the cart to the user
             PreparedStatement linkStmt = dbConn.prepareStatement(linkUserCartSQL);
             linkStmt.setInt(1, userId);
             linkStmt.setInt(2, newCartId);
@@ -92,7 +87,6 @@ public class CartService {
      */
     public CartModel getCartById(int cartId) {
         if (isConnectionError) {
-            System.out.println("Connection Error");
             return null;
         }
 
@@ -120,11 +114,8 @@ public class CartService {
      */
     public CartModel getUserCart(int userId) {
         if (isConnectionError) {
-            System.out.println("CartService: Connection Error");
             return null;
         }
-
-        System.out.println("CartService: Getting cart for user: " + userId);
 
         String query = "SELECT c.* FROM cart c " +
                       "JOIN user_cart uc ON c.cart_id = uc.cart_id " +
@@ -139,13 +130,10 @@ public class CartService {
                 CartModel cart = new CartModel();
                 cart.setId(rs.getInt("cart_id"));
                 cart.setDate(rs.getDate("created_date"));
-                System.out.println("CartService: Found cart with ID: " + cart.getId());
                 return cart;
             }
-            System.out.println("CartService: No cart found for user");
             return null;
         } catch (SQLException e) {
-            System.out.println("CartService: SQL Error in getUserCart: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -158,7 +146,6 @@ public class CartService {
      */
     public List<CartModel> getUserCarts(int userId) {
         if (isConnectionError) {
-            System.out.println("Connection Error");
             return null;
         }
 
@@ -191,7 +178,6 @@ public class CartService {
      */
     public boolean deleteCart(int cartId) {
         if (isConnectionError) {
-            System.out.println("Connection Error");
             return false;
         }
 
@@ -241,13 +227,9 @@ public class CartService {
      */
     public boolean addToCart(int cartId, int productId, int quantity) {
         if (isConnectionError) {
-            System.out.println("CartService: Connection Error");
             return false;
         }
 
-        System.out.println("CartService: Adding to cart - CartID: " + cartId + ", ProductID: " + productId + ", Quantity: " + quantity);
-
-        // First check if item already exists in cart
         String checkQuery = "SELECT quantity FROM cart_item WHERE cart_id = ? AND product_id = ?";
         try (PreparedStatement checkStmt = dbConn.prepareStatement(checkQuery)) {
             checkStmt.setInt(1, cartId);
@@ -255,25 +237,18 @@ public class CartService {
             ResultSet rs = checkStmt.executeQuery();
 
             if (rs.next()) {
-                // Item exists, update quantity
                 int currentQuantity = rs.getInt("quantity");
-                System.out.println("CartService: Item exists in cart with quantity: " + currentQuantity);
                 return updateCartItemQuantity(cartId, productId, currentQuantity + quantity);
             } else {
-                // Item doesn't exist, insert new
-                System.out.println("CartService: Item doesn't exist in cart, inserting new");
                 String insertQuery = "INSERT INTO cart_item (cart_id, product_id, quantity) VALUES (?, ?, ?)";
                 try (PreparedStatement insertStmt = dbConn.prepareStatement(insertQuery)) {
                     insertStmt.setInt(1, cartId);
                     insertStmt.setInt(2, productId);
                     insertStmt.setInt(3, quantity);
-                    int result = insertStmt.executeUpdate();
-                    System.out.println("CartService: Insert result: " + (result > 0 ? "success" : "failed"));
-                    return result > 0;
+                    return insertStmt.executeUpdate() > 0;
                 }
             }
         } catch (SQLException e) {
-            System.out.println("CartService: SQL Error in addToCart: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -288,7 +263,6 @@ public class CartService {
      */
     public boolean updateCartItemQuantity(int cartId, int productId, int quantity) {
         if (isConnectionError) {
-            System.out.println("Connection Error");
             return false;
         }
 
@@ -316,7 +290,6 @@ public class CartService {
      */
     public boolean removeFromCart(int cartId, int productId) {
         if (isConnectionError) {
-            System.out.println("Connection Error");
             return false;
         }
 
@@ -338,7 +311,6 @@ public class CartService {
      */
     public List<ProductModel> getCartItems(int cartId) {
         if (isConnectionError) {
-            System.out.println("Connection Error");
             return null;
         }
 
@@ -357,10 +329,9 @@ public class CartService {
                     rs.getString("name"),
                     rs.getString("description"),
                     rs.getDouble("price"),
-                    rs.getInt("quantity"), // This is the product's stock quantity
+                    rs.getInt("quantity"),
                     rs.getString("imageUrl")
                 );
-                // Set the cart quantity separately
                 product.setCartQuantity(rs.getInt("cart_quantity"));
                 cartItems.add(product);
             }

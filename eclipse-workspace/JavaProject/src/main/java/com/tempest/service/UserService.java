@@ -65,35 +65,35 @@ public class UserService{
 	
     public UserModel getUserDetails(int id) {
         if (isConnectionError == true) {
-            System.out.println("Connection Error");
-            return null;
-        }
-        
+			System.out.println("Connection Error");
+			return null;
+		}
+    	
         String query = "SELECT id, first_name, last_name, email, phone, address, role from user where id = ?";
-          
+		  
         try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            
+	        	stmt.setInt(1, id);
+	            ResultSet rs = stmt.executeQuery();
+	            
             if (rs.next()) {  // Check if there are any results
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
-                String email = rs.getString("email");
-                String phone = rs.getString("phone");
-                String address = rs.getString("address");
-                String roleString = rs.getString("role");
+	            String firstName = rs.getString("first_name");
+	            String lastName = rs.getString("last_name");
+	            String email = rs.getString("email");
+	            String phone = rs.getString("phone");
+	            String address = rs.getString("address");
+	            String roleString = rs.getString("role");
                 Roles role = Roles.valueOf(roleString.toLowerCase());
-              
+	          
                 UserModel user = new UserModel(firstName, lastName, email, phone, address, role);
                 user.setUser_id(id);
-                return user;
+	            return user;
             }
             return null;  // Return null if no user found
-            
+	            
         } catch (SQLException e) {
-            e.printStackTrace();
+	                   e.printStackTrace();
             return null;
-        }
+	        }
     }
     
     public Roles getUserRole(String email) {

@@ -32,7 +32,7 @@
                     </thead>
                     <tbody>
                         <c:forEach var="item" items="${cartItems}">
-                            <tr>
+                            <tr data-product-id="${item.id}">
                                 <td>
                                     <div class="product-info">
                                         <img src="${pageContext.request.contextPath}/resource/images/products/${item.imageUrl}" alt="${item.name}" class="product-thumbnail">
@@ -40,16 +40,17 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <form action="${pageContext.request.contextPath}/cart/update" method="post" class="quantity-form">
+                                    <form action="${pageContext.request.contextPath}/cart/update" method="post" class="quantity-form" onsubmit="return validateQuantity(this)">
                                         <input type="hidden" name="productId" value="${item.id}">
-                                        <input type="number" name="quantity" value="${item.cartQuantity}" min="1" 
+                                        <input type="number" name="quantity" value="${item.cartQuantity}" min="1" max="${item.quantity}"
                                                onchange="this.form.submit()" class="quantity-input">
+                                        <span class="error" id="quantityError_${item.id}"></span>
                                     </form>
                                 </td>
                                 <td>$${item.price}</td>
                                 <td>$${item.price * item.cartQuantity}</td>
                                 <td>
-                                    <form action="${pageContext.request.contextPath}/cart/remove" method="post" class="remove-form">
+                                    <form action="${pageContext.request.contextPath}/cart/delete" method="post" class="remove-form" onsubmit="return confirmRemove(this)">
                                         <input type="hidden" name="productId" value="${item.id}">
                                         <button type="submit" class="remove-button">Remove</button>
                                     </form>
@@ -81,5 +82,42 @@
         </section>
     </main>
     <script src="cart.js"></script>
+    <script>
+    function validateQuantityInput(input) {
+        const quantity = parseInt(input.value);
+        const maxQuantity = parseInt(input.max);
+        const errorElement = document.getElementById('quantityError_' + input.form.querySelector('[name="productId"]').value);
+        
+        if (isNaN(quantity) || quantity < 1) {
+            errorElement.textContent = 'Quantity must be at least 1';
+            input.value = 1;
+            return false;
+        } else if (quantity > maxQuantity) {
+            errorElement.textContent = `Only ${maxQuantity} items available`;
+            input.value = maxQuantity;
+            return false;
+        } else {
+            errorElement.textContent = '';
+            return true;
+        }
+    }
+
+    function validateQuantity(form) {
+        const quantity = parseInt(form.querySelector('[name="quantity"]').value);
+        const maxQuantity = parseInt(form.querySelector('[name="quantity"]').max);
+        
+        if (isNaN(quantity) || quantity < 1 || quantity > maxQuantity) {
+            const productId = form.querySelector('[name="productId"]').value;
+            document.getElementById('quantityError_' + productId).textContent = 'Please enter a valid quantity';
+            return false;
+        }
+        
+        return true;
+    }
+
+    function confirmRemove(form) {
+        return confirm('Are you sure you want to remove this item from your cart?');
+    }
+    </script>
 </body>
 </html>

@@ -8,19 +8,42 @@
 </head>
 <body>
 <div class="product-card">
-	<img class="product-image" src="${pageContext.request.contextPath}/resource/images/products/${param.imageUrl}" alt="" />
+	<img class="product-image" src="${pageContext.request.contextPath}/resource/images/products/${param.imageUrl}" alt="${param.name}" onerror="this.src='${pageContext.request.contextPath}/resource/images/placeholder.png'" />
 		<div class="product-details">
-			<div class="product-name"><a href="${pageContext.request.contextPath}/product-detail/${param.id}">${param.name}</a></div>
+			<div class="product-name"><a href="${pageContext.request.contextPath}/product/detail/${param.id}">${param.name}</a></div>
 			<div class="product-price">$${param.price}</div>
 			<div class="product-actions">
-				<button onclick="window.location.href='${pageContext.request.contextPath}/checkout'" class="action-button">Buy-now</button>
-				<form action="${pageContext.request.contextPath}/cart/add" method="post" style="display: inline;">
+				<button onclick="handleBuyNow(${param.id}, ${param.quantity})" class="action-button">Buy-now</button>
+				<form action="${pageContext.request.contextPath}/cart/add" method="post" style="display: inline;" 
+					  onsubmit="return validateAddToCart(this, ${param.quantity})">
 					<input type="hidden" name="productId" value="${param.id}">
 					<input type="hidden" name="productName" value="${param.name}">
-					<button type="submit" class="action-button" onclick="">Add to Cart</button>
+					<input type="hidden" name="quantity" value="1">
+					<button type="submit" class="action-button">Add to Cart</button>
 				</form>
 			</div>
+			<c:if test="${not empty error}">
+				<div class="error-message">${error}</div>
+			</c:if>
 		</div>
 </div>
+
+<script>
+function handleBuyNow(productId, availableQuantity) {
+	if (availableQuantity <= 0) {
+		alert('Sorry, this product is out of stock');
+		return;
+	}
+	window.location.href = '${pageContext.request.contextPath}/checkout?productId=' + productId;
+}
+
+function validateAddToCart(form, availableQuantity) {
+	if (availableQuantity <= 0) {
+		alert('Sorry, this product is out of stock');
+		return false;
+	}
+	return true;
+}
+</script>
 </body>
 </html>	

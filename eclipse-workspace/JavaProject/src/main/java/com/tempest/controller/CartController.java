@@ -6,7 +6,10 @@ import java.util.List;
 import com.tempest.model.CartModel;
 import com.tempest.model.ProductModel;
 import com.tempest.service.CartService;
+import com.tempest.service.ProductService;
 import com.tempest.util.CookieUtil;
+import com.tempest.util.ValidationUtil;
+import com.tempest.util.ErrorHandler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,175 +25,175 @@ import jakarta.servlet.http.HttpSession;
 public class CartController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private CartService cartService;
+	private ProductService productService;
 	private static final String ROLE_COOKIE_NAME = "tempest_user_role";
 
-	public CartController() {
+	public void init() {
 		cartService = new CartService();
+		productService = new ProductService();
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-			try {
-				HttpSession session = request.getSession();
-			
-				int userId = Integer.parseInt(CookieUtil.getCookieValue(request, "userId"));
-				
-				// Get user's cart
-				CartModel cart = cartService.getUserCart(userId);
-				System.out.println("CartController: Retrieved cart: " + (cart != null ? cart.getId() : "null"));
-				
-				if (cart == null) {
-					// Create new cart if user doesn't have one
-					int cartId = cartService.createCart(userId);
-					System.out.println("CartController: Created new cart with ID: " + cartId);
-					cart = new CartModel();
-					cart.setId(cartId);
-				}
-
-				// Get cart items with product details
-				List<ProductModel> cartItems = cartService.getCartItems(cart.getId());
-				System.out.println("CartController: Retrieved " + (cartItems != null ? cartItems.size() : 0) + " cart items");
-				double subtotal = calculateSubtotal(cartItems);
-				double tax = subtotal * 0.13; // 13% tax
-				double total = subtotal + tax;
-
-				request.setAttribute("cartItems", cartItems);
-				request.setAttribute("subtotal", subtotal);
-				request.setAttribute("tax", tax);
-				request.setAttribute("total", total);
-				
-				System.out.println("CartController: Forwarding to cart.jsp");
-				request.getRequestDispatcher("/WEB-INF/pages/cartPage/cart.jsp").forward(request, response);
-			} catch (Exception e) {
-				System.out.println("CartController: Error processing cart: " + e.getMessage());
-				e.printStackTrace();
-				request.setAttribute("error", "An error occurred while loading your cart");
-				response.sendRedirect(request.getContextPath() + "/home");
+		try {
+			HttpSession session = request.getSession(false);
+			if (session == null || session.getAttribute("userId") == null) {
+				ErrorHandler.handleAuthenticationError(request, response, "Please login to view your cart");
+				return;
 			}
+
+			int userId = (int) session.getAttribute("userId");
+			
+			// Get the user's cart
+			CartModel userCart = cartService.getUserCart(userId);
+			if (userCart == null) {
+				// If no cart exists, create a new one
+				int cartId = cartService.createCart(userId);
+				if (cartId == -1) {
+					ErrorHandler.handleDatabaseError(request, response, 
+						new Exception("Failed to create cart"), "/WEB-INF/pages/cartPage/cart.jsp");
+					return;
+				}
+				userCart = cartService.getCartById(cartId);
+			}
+			
+			// Get cart items using the cart ID
+			List<ProductModel> cartItems = cartService.getCartItems(userCart.getId());
+			
+			if (cartItems == null) {
+				ErrorHandler.handleDatabaseError(request, response, new Exception("Failed to fetch cart items"), 
+					"/WEB-INF/pages/cartPage/cart.jsp");
+				return;
+			}
+
+			request.setAttribute("cartItems", cartItems);
+			request.getRequestDispatcher("/WEB-INF/pages/cartPage/cart.jsp").forward(request, response);
+		} catch (Exception e) {
+			ErrorHandler.handleDatabaseError(request, response, e, "/WEB-INF/pages/cartPage/cart.jsp");
 		}
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String pathInfo = request.getPathInfo();
-		System.out.println("CartController: Processing POST request for path: " + pathInfo);
-		
-		// Check role from cookie
-		String role = CookieUtil.getCookieValue(request, ROLE_COOKIE_NAME);
-		System.out.println("CartController: User role from cookie: " + role);
-		
-		// Check session for user ID
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			System.out.println("CartController: No session found");
-			response.sendRedirect(request.getContextPath() + "/login");
-			return;
-		}
-
-		Integer userId = (Integer) session.getAttribute("userId");
-		System.out.println("CartController: User ID from session: " + userId);
-		
-		if (userId == null) {
-			System.out.println("CartController: No user ID in session");
-			response.sendRedirect(request.getContextPath() + "/login");
-			return;
-		}
-
-		if (role == null || !role.equals("customer")) {
-			System.out.println("CartController: User not authorized - Role: " + role);
-			response.sendRedirect(request.getContextPath() + "/login");
+		String action = request.getPathInfo();
+		if (action == null) {
+			ErrorHandler.handleNotFoundError(request, response, "Invalid cart action");
 			return;
 		}
 
 		try {
-			CartModel cart = cartService.getUserCart(userId);
-			System.out.println("CartController: Retrieved cart: " + (cart != null ? cart.getId() : "null"));
+			HttpSession session = request.getSession(false);
+			if (session == null || session.getAttribute("userId") == null) {
+				ErrorHandler.handleAuthenticationError(request, response, "Please login to manage your cart");
+				return;
+			}
+
+			int userId = (int) session.getAttribute("userId");
+			String productIdStr = request.getParameter("productId");
+			String quantityStr = request.getParameter("quantity");
+
+			if (!ValidationUtil.isValidProductId(productIdStr)) {
+				ErrorHandler.handleValidationError(request, response, "Invalid product ID", 
+					"/WEB-INF/pages/cartPage/cart.jsp");
+				return;
+			}
+
+			int productId = Integer.parseInt(productIdStr);
 			
-			if (cart == null) {
+			// Get the user's cart
+			CartModel userCart = cartService.getUserCart(userId);
+			if (userCart == null) {
+				// If no cart exists, create a new one
 				int cartId = cartService.createCart(userId);
-				System.out.println("CartController: Created new cart with ID: " + cartId);
-				cart = new CartModel();
-				cart.setId(cartId);
+				if (cartId == -1) {
+					ErrorHandler.handleDatabaseError(request, response, 
+						new Exception("Failed to create cart"), "/WEB-INF/pages/cartPage/cart.jsp");
+					return;
+				}
+				userCart = cartService.getCartById(cartId);
 			}
 			
-			if (pathInfo != null && pathInfo.equals("/add")) {
-				try {
-					String productIdStr = request.getParameter("productId");
-					System.out.println("CartController: Received productId parameter: " + productIdStr);
+			int cartId = userCart.getId();
+
+			switch (action) {
+				case "/add":
+					if (!ValidationUtil.isValidQuantity(quantityStr)) {
+						ErrorHandler.handleValidationError(request, response, "Invalid quantity", 
+							"/WEB-INF/pages/cartPage/cart.jsp");
+						return;
+					}
+					int quantity = Integer.parseInt(quantityStr);
+					ProductModel product = productService.getProductById(productId);
 					
-					if (productIdStr == null || productIdStr.trim().isEmpty()) {
-						System.out.println("CartController: Product ID is null or empty");
-						request.setAttribute("error", "Invalid product ID");
-						response.sendRedirect(request.getContextPath() + "/products");
+					if (product == null) {
+						ErrorHandler.handleNotFoundError(request, response, "Product not found");
 						return;
 					}
 
-					int productId = Integer.parseInt(productIdStr);
-					int quantity = 1; // Default quantity
-					System.out.println("CartController: Adding product ID: " + productId + " with quantity: " + quantity);
+					if (quantity > product.getQuantity()) {
+						ErrorHandler.handleValidationError(request, response, 
+							"Requested quantity exceeds available stock", "/WEB-INF/pages/cartPage/cart.jsp");
+						return;
+					}
 
-					// Add product to cart
-					if (cartService.addToCart(cart.getId(), productId, quantity)) {
-						System.out.println("CartController: Successfully added product to cart");
-						response.sendRedirect(request.getContextPath() + "/cart");
-					} else {
-						System.out.println("CartController: Failed to add product to cart");
-						request.setAttribute("error", "Failed to add item to cart");
-						response.sendRedirect(request.getContextPath() + "/products");
+					if (!cartService.addToCart(cartId, productId, quantity)) {
+						ErrorHandler.handleDatabaseError(request, response, 
+							new Exception("Failed to add item to cart"), "/WEB-INF/pages/cartPage/cart.jsp");
+						return;
 					}
-				} catch (NumberFormatException e) {
-					System.out.println("CartController: Invalid product ID format: " + e.getMessage());
-					request.setAttribute("error", "Invalid product ID format");
-					response.sendRedirect(request.getContextPath() + "/products");
-				} catch (Exception e) {
-					System.out.println("CartController: Error adding to cart: " + e.getMessage());
-					e.printStackTrace();
-					request.setAttribute("error", "An error occurred while adding item to cart");
-					response.sendRedirect(request.getContextPath() + "/products");
-				}
-			} else if (pathInfo != null && pathInfo.equals("/remove")) {
-				try {
-					int productId = Integer.parseInt(request.getParameter("productId"));
+					break;
+
+				case "/update":
+					if (!ValidationUtil.isValidQuantity(quantityStr)) {
+						ErrorHandler.handleValidationError(request, response, "Invalid quantity", 
+							"/WEB-INF/pages/cartPage/cart.jsp");
+						return;
+					}
+					quantity = Integer.parseInt(quantityStr);
+					product = productService.getProductById(productId);
 					
-					if (cartService.removeFromCart(cart.getId(), productId)) {
-						response.sendRedirect(request.getContextPath() + "/cart");
-					} else {
-						request.setAttribute("error", "Failed to remove item from cart");
-						response.sendRedirect(request.getContextPath() + "/cart");
+					if (product == null) {
+						ErrorHandler.handleNotFoundError(request, response, "Product not found");
+						return;
 					}
-				} catch (Exception e) {
-					System.out.println("CartController: Error removing from cart: " + e.getMessage());
-					e.printStackTrace();
-					request.setAttribute("error", "An error occurred while removing item from cart");
-					response.sendRedirect(request.getContextPath() + "/cart");
-				}
-			} else if (pathInfo != null && pathInfo.equals("/update")) {
-				try {
-					int productId = Integer.parseInt(request.getParameter("productId"));
-					int quantity = Integer.parseInt(request.getParameter("quantity"));
-					
-					if (cartService.updateCartItemQuantity(cart.getId(), productId, quantity)) {
-						response.sendRedirect(request.getContextPath() + "/cart");
-					} else {
-						request.setAttribute("error", "Failed to update item quantity");
-						response.sendRedirect(request.getContextPath() + "/cart");
+
+					if (quantity > product.getQuantity()) {
+						ErrorHandler.handleValidationError(request, response, 
+							"Requested quantity exceeds available stock", "/WEB-INF/pages/cartPage/cart.jsp");
+						return;
 					}
-				} catch (Exception e) {
-					System.out.println("CartController: Error updating cart: " + e.getMessage());
-					e.printStackTrace();
-					request.setAttribute("error", "An error occurred while updating cart");
-					response.sendRedirect(request.getContextPath() + "/cart");
-				}
+
+					if (!cartService.updateCartItemQuantity(cartId, productId, quantity)) {
+						ErrorHandler.handleDatabaseError(request, response, 
+							new Exception("Failed to update cart item"), "/WEB-INF/pages/cartPage/cart.jsp");
+						return;
+					}
+					break;
+
+				case "/delete":
+				case "/remove":
+					if (!cartService.removeFromCart(cartId, productId)) {
+						ErrorHandler.handleDatabaseError(request, response, 
+							new Exception("Failed to remove item from cart"), "/WEB-INF/pages/cartPage/cart.jsp");
+						return;
+					}
+					break;
+
+				default:
+					ErrorHandler.handleNotFoundError(request, response, "Invalid cart action");
+					return;
 			}
+
+			response.sendRedirect(request.getContextPath() + "/cart");
+		} catch (NumberFormatException e) {
+			ErrorHandler.handleValidationError(request, response, "Invalid input format", 
+				"/WEB-INF/pages/cartPage/cart.jsp");
 		} catch (Exception e) {
-			System.out.println("CartController: Unexpected error: " + e.getMessage());
-			e.printStackTrace();
-			request.setAttribute("error", "An unexpected error occurred");
-			response.sendRedirect(request.getContextPath() + "/products");
+			ErrorHandler.handleDatabaseError(request, response, e, "/WEB-INF/pages/cartPage/cart.jsp");
 		}
 	}
 

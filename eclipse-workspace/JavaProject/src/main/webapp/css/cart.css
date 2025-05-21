@@ -35,9 +35,9 @@ main {
 
 .empty-cart {
     text-align: center;
-    color: #666;
     padding: 2rem;
-    font-size: 1.1rem;
+    color: #666;
+    font-style: italic;
 }
 
 .error-message {
@@ -84,32 +84,49 @@ main {
 .quantity-form {
     display: flex;
     align-items: center;
+    gap: 5px;
 }
 
 .quantity-input {
     width: 60px;
-    padding: 0.5rem;
+    padding: 5px;
     border: 1px solid #ddd;
     border-radius: 4px;
     text-align: center;
 }
 
-.remove-form {
-    margin: 0;
+.update-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.update-button:hover {
+    background-color: #45a049;
 }
 
 .remove-button {
-    background-color: #dc3545;
+    background-color: #f44336;
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
 .remove-button:hover {
-    background-color: #c82333;
+    background-color: #c0392b;
+}
+
+.error {
+    color: #f44336;
+    font-size: 0.8em;
+    display: block;
+    margin-top: 5px;
 }
 
 #cart-summary {
@@ -121,6 +138,7 @@ main {
     height: fit-content;
     position: sticky;
     top: 2rem;
+    display: block;
 }
 
 #cart-summary h2 {
@@ -162,6 +180,26 @@ main {
 
 #checkout-button:hover {
     background-color: #222;
+}
+
+.price, .total {
+    font-weight: 500;
+    color: #333;
+}
+
+.total {
+    color: #2ecc71;
+}
+
+.quantity-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.update-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
