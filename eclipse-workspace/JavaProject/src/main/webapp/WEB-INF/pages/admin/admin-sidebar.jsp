@@ -14,6 +14,12 @@
 			<a href="${pageContext.request.contextPath}/admin/order" class="sidebar-item">Orders</a>
 			<a href="${pageContext.request.contextPath}/admin/customer" class="sidebar-item">Customers</a>
 			<a href="${pageContext.request.contextPath}/admin/setting" class="sidebar-item">Settings</a>
+			
+			<div class="sidebar-divider"></div>
+			<a href="${pageContext.request.contextPath}/logout" class="sidebar-item logout-item">
+				<span class="logout-icon">🚪</span>
+				Logout
+			</a>
 		</div>
 	</div>
 </body>

@@ -107,7 +107,7 @@ public class EditProductController extends HttpServlet {
 			int categoryId = Integer.parseInt(request.getParameter("productCategory"));
 			
 			// Handle image upload if a new image is provided
-			String imageUrl = null;
+			String imageUrl = productService.getProductById(productId).getImageUrl();
 			Part imagePart = request.getPart("productImageInput");
 			if (imagePart != null && imagePart.getSize() > 0) {
 				imageUrl = imageUtil.getImageNameFromPart(imagePart);

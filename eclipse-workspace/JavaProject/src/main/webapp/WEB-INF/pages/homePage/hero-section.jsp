@@ -62,8 +62,8 @@
    <div class="content">
       <h1>The future of sports is here</h1>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      <a href="${pageContext.request.contextPath}/login">
-      <button >Discover Us</button>
+      <a href="${pageContext.request.contextPath}/products">
+      <button>Discover Us</button>
       </a>
     </div>
   </div>

@@ -33,6 +33,9 @@ public class AuthenticationFilter implements Filter {
 	private static final String ORDER_EDIT = "/admin/order/edit";
 	private static final String ORDER_ADD = "/admin/order/add";
 	private static final String ORDER_DELETE = "/admin/order/delete";
+	private static final String CUSTOMER_DASHBOARD = "/admin/customer";
+	private static final String CUSTOMER_EDIT = "/admin/customer/edit";
+	private static final String CUSTOMER_DELETE = "/admin/customer/delete";
 	private static final String PROFILE_UPDATE = "/profile/update";
 	private static final String ABOUT = "/aboutus";
 	private static final String ORDER = "/orders";
@@ -133,7 +136,8 @@ public class AuthenticationFilter implements Filter {
 			   path.equals(PRODUCT_DELETE) || path.equals(ADMIN_ORDER) || path.equals(PRODUCT) || path.equals(PROFILE_UPDATE) ||									
 			   path.startsWith(ORDER_EDIT) || path.startsWith(ORDER_ADD) || 
 			   path.equals(ORDER_DELETE) || path.equals(ORDER) || 
-			   path.equals(HOME) || path.equals(ROOT) ;
+			   path.equals(CUSTOMER_DASHBOARD) || path.startsWith(CUSTOMER_EDIT) ||
+			   path.equals(CUSTOMER_DELETE) || path.equals(HOME) || path.equals(ROOT);
 	}
 
 	private boolean isUserPath(String path) {

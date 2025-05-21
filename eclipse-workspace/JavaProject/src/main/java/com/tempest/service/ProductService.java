@@ -408,4 +408,43 @@ public class ProductService{
             return null;
         }
     }
+
+    public List<ProductModel> getProductsByCategories(List<Integer> categoryIds) {
+        if(isConnectionError) {
+            System.out.println("Connection Error");
+            return null;
+        }
+        
+        String query = "SELECT DISTINCT p.*, pc.category_id FROM product p " +
+                      "JOIN product_category pc ON p.id = pc.product_id " +
+                      "WHERE pc.category_id IN (" + String.join(",", Collections.nCopies(categoryIds.size(), "?")) + ")";
+        
+        try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+            // Set the category IDs as parameters
+            for (int i = 0; i < categoryIds.size(); i++) {
+                stmt.setInt(i + 1, categoryIds.get(i));
+            }
+            
+            ResultSet rs = stmt.executeQuery();
+            List<ProductModel> productList = new ArrayList<>();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Double price = rs.getDouble("price");
+                int quantity = rs.getInt("quantity");
+                String imageUrl = rs.getString("imageUrl");
+                int categoryId = rs.getInt("category_id");
+                
+                ProductModel product = new ProductModel(id, name, description, price, quantity, imageUrl);
+                product.setCategoryId(categoryId);
+                productList.add(product);
+            }
+            return productList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

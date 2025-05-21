@@ -7,7 +7,7 @@ public class UserModel {
         customer
     }
 
-    private int id;
+    private int user_id;
     private String first_name;
     private String last_name;
     private String email;
@@ -29,15 +29,15 @@ public class UserModel {
         this.role = role;
     }
     
-    public UserModel(int id,String first_name,String last_name, String email, String password, String phone, String address, Roles role) {
-    	this.id = id;
-    	this.first_name = first_name;
-    	this.last_name = last_name;
-    	this.email = email;
-    	this.phone = phone;
-    	this.address = address;
-    	this.password = password;
-    	this.role = role;
+    public UserModel(int user_id, String first_name, String last_name, String email, String password, String phone, String address, Roles role) {
+        this.user_id = user_id;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.password = password;
+        this.role = role;
     }
     
     public UserModel(String first_name,String last_name, String email, String password, String phone, String address, Roles role) {
@@ -59,9 +59,18 @@ public class UserModel {
     	this.address = address;
     }
 
+    public UserModel(String first_name,String last_name, String email, String phone, String address, Roles role) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
+    }
+
     // Getter for user_id
     public int getUser_id() {
-        return id;
+        return user_id;
     }
 
     // Getter for first_name
@@ -99,8 +108,8 @@ public class UserModel {
     }
     
     // Setter for user_id
-    public void setUser_id(int id) {
-        this.id = id;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     // Setter for first_name

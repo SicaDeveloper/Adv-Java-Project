@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import com.tempest.model.CategoriesModel;
 import com.tempest.model.ProductModel;
@@ -34,16 +35,38 @@ public class ProductsController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Get selected category IDs from request parameters
+		String[] categoryIds = request.getParameterValues("categoryIds");
 		
-		List<ProductModel> products = productService.getAllProductsInfo();
+		List<ProductModel> products;
+		if (categoryIds != null && categoryIds.length > 0) {
+			// Convert String array to List<Integer>
+			List<Integer> selectedCategoryIds = new ArrayList<>();
+			for (String id : categoryIds) {
+				try {
+					selectedCategoryIds.add(Integer.parseInt(id));
+				} catch (NumberFormatException e) {
+					// Skip invalid category IDs
+					continue;
+				}
+			}
+			
+			// Get products filtered by selected categories
+			products = productService.getProductsByCategories(selectedCategoryIds);
+		} else {
+			// Get all products if no categories are selected
+			products = productService.getAllProductsInfo();
+		}
+		
+		// Get all categories for the filter sidebar
 		List<CategoriesModel> categories = categoriesService.getAllCategoryInfo();
-        // Add more ProductModel objects here
-
-        // Set the list as a request attribute
-        request.setAttribute("product", products);
-        request.setAttribute("categories", categories);
-		// TODO Auto-generated method stub
-		request.getRequestDispatcher("/WEB-INF/pages/productPage/product-listing-page.jsp").forward(request, response);
+		
+		// Set attributes for the JSP
+		request.setAttribute("product", products);
+		request.setAttribute("categories", categories);
+		
+		// Forward to the product listing page
+		request.getRequestDispatcher("/WEB-INF/pages/productPage/product-listing.jsp").forward(request, response);
 	}
 
 	/**
