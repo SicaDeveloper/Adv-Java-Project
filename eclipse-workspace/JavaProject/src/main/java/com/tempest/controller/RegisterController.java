@@ -10,6 +10,7 @@ import com.tempest.model.UserModel;
 import com.tempest.model.UserModel.Roles;
 import com.tempest.service.RegisterService;
 import com.tempest.util.PasswordUtil;
+import com.tempest.util.ValidationUtil;
 /**
  * Servlet implementation class RegisterController
  */
@@ -47,10 +48,37 @@ public class RegisterController extends HttpServlet {
 		String address = request.getParameter("address");
 		Roles role = UserModel.Roles.customer;
 		
+		// Validate email format
+		if (!ValidationUtil.isValidEmail(email)) {
+			request.setAttribute("error", "Invalid email format");
+			request.getRequestDispatcher("/WEB-INF/pages/loginAndRegistrationPage/register.jsp").forward(request, response);
+			return;
+		}
+		
+		// Check if email already exists
+		if (registerService.isEmailExists(email)) {
+			request.setAttribute("error", "Email already registered. Please use a different email or login.");
+			request.getRequestDispatcher("/WEB-INF/pages/loginAndRegistrationPage/register.jsp").forward(request, response);
+			return;
+		}
+		
+		// Validate phone number
+		if (!ValidationUtil.isValidPhoneNumber(phone)) {
+			request.setAttribute("error", "Invalid phone number format. Must start with 98 and be 10 digits long.");
+			request.getRequestDispatcher("/WEB-INF/pages/loginAndRegistrationPage/register.jsp").forward(request, response);
+			return;
+		}
+		
+		// Validate password strength
+		if (!ValidationUtil.isValidPassword(password)) {
+			request.setAttribute("error", "Password must contain at least 1 capital letter, 1 number, and 1 special character.");
+			request.getRequestDispatcher("/WEB-INF/pages/loginAndRegistrationPage/register.jsp").forward(request, response);
+			return;
+		}
+		
 		password = PasswordUtil.encrypt(email, password);
 		
 		UserModel currentUser = new UserModel(first_name, last_name, email, password, phone, address, role);
-		
 		
 		if(registerService.addCustomer(currentUser)) {
 			response.sendRedirect(request.getContextPath() + "/login");

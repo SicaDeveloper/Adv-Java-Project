@@ -117,7 +117,7 @@ body{
     width: 20px;
     height: 20px;
     cursor: pointer;
-    accent-color: #2563eb;
+    accent-color: black;
     border: 2px solid #e5e7eb;
     border-radius: 4px;
 }
@@ -132,13 +132,13 @@ body{
 }
 
 .category-item label:hover {
-    color: #2563eb;
+    color: black;
 }
 
 .filter-button {
     width: 100%;
     padding: 0.875rem;
-    background-color: #2563eb;
+    background-color: black;
     color: white;
     border: none;
     border-radius: 8px;
@@ -154,9 +154,9 @@ body{
 }
 
 .filter-button:hover {
-    background-color: #1d4ed8;
+    background-color: #333;
     transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .filter-button:active {
@@ -165,10 +165,11 @@ body{
 }
 
 .product-list{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 2rem;
     padding: 0.5rem;
+    justify-content: flex-start;
 }
 
 .checkbox{
@@ -203,8 +204,8 @@ body{
     }
     
     .product-list {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 1.5rem;
+        justify-content: center;
     }
     
     .product-navbar {
@@ -214,7 +215,6 @@ body{
 
 @media (max-width: 480px) {
     .product-list {
-        grid-template-columns: 1fr;
         gap: 1.25rem;
     }
     

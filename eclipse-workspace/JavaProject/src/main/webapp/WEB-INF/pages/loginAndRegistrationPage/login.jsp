@@ -5,6 +5,18 @@
 		<meta charset="UTF-8" />
 		<title>Login</title>
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css" />
+		<style>
+			.error-message {
+				color: #dc3545;
+				background-color: #f8d7da;
+				border: 1px solid #f5c6cb;
+				border-radius: 4px;
+				padding: 10px;
+				margin-bottom: 15px;
+				text-align: center;
+				font-size: 14px;
+			}
+		</style>
 		<!-- 
 			Author: Raj Dangol
 			Date: 15th April, 2025
@@ -23,15 +35,23 @@
 					<h2>Welcome Back</h2>
 					<h5>Enter your credentials to access your account</h5>
 				</div>
+				
+				<% if (request.getAttribute("error") != null) { %>
+					<div class="error-message">
+						<%= request.getAttribute("error") %>
+					</div>
+				<% } %>
+				
 				<form method="post" action="login">
 					<div class="form-group">
 						<label for="email">Email</label>
 						<input
-							type="text"
+							type="email"
 							id="email"
 							name="email"
 							placeholder="Enter your email"
 							required
+							value="<%= request.getParameter("email") != null ? request.getParameter("email") : "" %>"
 						/>
 					</div>
 					<div class="form-group">

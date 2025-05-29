@@ -139,37 +139,6 @@ public class CartService {
         }
     }
     
-    /**
-     * Get all carts for a user
-     * @param userId The ID of the user
-     * @return List of all carts for the user
-     */
-    public List<CartModel> getUserCarts(int userId) {
-        if (isConnectionError) {
-            return null;
-        }
-
-        String sql = "SELECT c.* FROM cart c " +
-                    "JOIN user_cart uc ON c.cart_id = uc.cart_id " +
-                    "WHERE uc.user_id = ? " +
-                    "ORDER BY c.created_date DESC";
-        List<CartModel> carts = new ArrayList<>();
-
-        try (PreparedStatement stmt = dbConn.prepareStatement(sql)) {
-            stmt.setInt(1, userId);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                CartModel cart = new CartModel();
-                cart.setId(rs.getInt("cart_id"));
-                cart.setDate(rs.getDate("created_date"));
-                carts.add(cart);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return carts;
-    }
     
     /**
      * Delete a cart and its items

@@ -2,6 +2,7 @@ package com.tempest.service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.tempest.config.DbConfig;
 import com.tempest.model.UserModel;
@@ -21,6 +22,22 @@ public class RegisterService {
 		} catch (SQLException|ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean isEmailExists(String email) {
+		try {
+			String query = "SELECT COUNT(*) FROM user WHERE email = ?";
+			PreparedStatement stmt = dbConn.prepareStatement(query);
+			stmt.setString(1, email);
+			ResultSet rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				return rs.getInt(1) > 0;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public Boolean addCustomer(UserModel user){
