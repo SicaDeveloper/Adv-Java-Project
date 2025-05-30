@@ -28,7 +28,7 @@ public class OrderService {
     }
 
     // Create - Add new order with products
-    public Boolean createOrder(OrderModel order, List<Integer> productIds) {8
+    public Boolean createOrder(OrderModel order, List<Integer> productIds) {
         if (isConnectionError) {
             System.out.println("Connection Error");
             return false;

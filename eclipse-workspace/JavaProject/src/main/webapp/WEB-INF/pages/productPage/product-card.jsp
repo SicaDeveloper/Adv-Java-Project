@@ -27,23 +27,5 @@
 			</c:if>
 		</div>
 </div>
-
-<script>
-function handleBuyNow(productId, availableQuantity) {
-	if (availableQuantity <= 0) {
-		alert('Sorry, this product is out of stock');
-		return;
-	}
-	window.location.href = '${pageContext.request.contextPath}/checkout?productId=' + productId;
-}
-
-function validateAddToCart(form, availableQuantity) {
-	if (availableQuantity <= 0) {
-		alert('Sorry, this product is out of stock');
-		return false;
-	}
-	return true;
-}
-</script>
 </body>
 </html>	

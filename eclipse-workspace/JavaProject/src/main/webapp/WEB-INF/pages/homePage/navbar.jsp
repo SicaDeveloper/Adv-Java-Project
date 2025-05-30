@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<link ref="stylesheet" href="${pageContext.request.contextPath}/css/navbar.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/navbar.css">
 <div class="navbar">
 	<div class="logo">
 		<a href="${pageContext.request.contextPath}/home">

@@ -52,7 +52,7 @@ pageEncoding="UTF-8"%>
                         </div>
                         <div class="form-item">
                             <label for="productImage">Product Image</label>
-                            <input type="file" id="productImage" name="productImage" accept="image/*" required
+                            <input type="file" id="productImage" name="productImageInput" accept="image/*" required
                                    onchange="validateImage(this)">
                             <span class="error" id="productImageError"></span>
                         </div>
@@ -143,9 +143,9 @@ function validateImage(input) {
     }
     
     const file = input.files[0];
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/avif'];
     if (!validTypes.includes(file.type)) {
-        errorElement.textContent = 'Please upload a valid image file (JPEG, PNG, or GIF)';
+        errorElement.textContent = 'Please upload a valid image file (JPEG, PNG, AVIF, or GIF)';
         return false;
     }
     

@@ -6,6 +6,7 @@
 		<meta charset="UTF-8" />
 		<title>${product.name} - Tempest</title>
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/product-detail.css" />
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/navbar.css" />
 	</head>
 	<body>
 		<jsp:include page="/WEB-INF/pages/homePage/navbar.jsp" />

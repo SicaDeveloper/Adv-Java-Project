@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile - Tempest</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/profile.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/navbar.css" />
 </head>
 <body>
     <jsp:include page="/WEB-INF/pages/homePage/navbar.jsp" />

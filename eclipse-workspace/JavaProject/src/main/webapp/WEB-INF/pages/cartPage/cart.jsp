@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cart.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/navbar.css" />
 </head>
 <body>
 	<jsp:include page="../homePage/navbar.jsp"></jsp:include>
